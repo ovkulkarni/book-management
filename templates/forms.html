@@ -1,4 +1,4 @@
-{% macro render_field(field, placeholder=None, id=None, class=None, maxlength=None) %}
+{% macro render_field(field, placeholder=None, id=None, class=None, maxlength=None, autofocus=False) %}
 	{{ field.label }}
-	{{ field(placeholder=placeholder, id=id, class=class, maxlength=maxlength)}}
+	{{ field(placeholder=placeholder, id=id, class=class, maxlength=maxlength, autofocus=autofocus)}}
 {%- endmacro %}

@@ -11,7 +11,7 @@
 		</div>
 		<form method="POST">
 			{{ form.csrf_token() }}
-			{{ render_field(form.isbn, placeholder="ISBN Number") }}
+			{{ render_field(form.isbn, placeholder="ISBN Number", autofocus=True, maxlength="13") }}
 			{{ render_field(form.price, placeholder="Price") }}
 			<button type="submit" class="button">Add to Inventory</button>
 		</form>

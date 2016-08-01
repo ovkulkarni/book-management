@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="row"><p><br /></p></div>
+<div class="row">
+	<div class="columns">
+		<div class="callout primary">
+			<form id="timeForm">
+				<label>Filter By:
+				<select name="time" id="timeSelect">
+					<option value="week" {% if request.args.get("time", "month") == "week" %}selected disabled {% endif %}>Week</option>
+					<option value="month" {% if request.args.get("time", "month") == "month" %}selected disabled {% endif %}>Month</option>
+					<option value="year" {% if request.args.get("time", "month") == "year" %}selected disabled {% endif %}>Year</option>
+				</select>
+		</div>
+	</div>
+</div>
+{% for purchase in purchases %}
+<div class="row">
+	<div class="columns">
+		<div class="callout">
+			<h2>Purchase {{ purchase.id }} - ${{ purchase.total }}</h2>
+			<h3>Time of Purchase: {{ purchase.time }}</h3>
+			<h5>Books Purchased:</h5>
+			{% for book in purchase.books %}
+			<p>&nbsp;&nbsp;{{ book.title }} - ${{ book.price }}</p>
+			{% endfor %}
+		</div>
+	</div>
+</div>
+{% endfor %}
+<div class="row">
+	<div class="columns">
+		<div class="callout">
+			<h1>Total Money: ${{ total }}</h1>
+		</div>
+	</div>
+</div>
+{% endblock %}
+{% block scripts %}
+<script type="text/javascript">
+	$(document).ready(function() {
+		$form = $("#timeForm");
+		$("#timeSelect").change(function(){
+			$form.submit()
+		});
+	});
+</script>
+{% endblock %}

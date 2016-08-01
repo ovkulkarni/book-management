@@ -1,7 +1,9 @@
 from flask import Blueprint, render_template, current_app, flash, url_for, request, session, flash, redirect
-from modules.cart.models import Book
+from modules.cart.models import Book, Purchase
 from .forms import ISBNBookForm, ManualBookForm
 from utils import flash_errors, isbn_lookup
+from datetime import datetime
+from dateutil.relativedelta import relativedelta
 
 
 inventory = Blueprint("inventory", __name__, template_folder="templates", url_prefix="/inventory")
@@ -65,3 +67,20 @@ def edit_book(isbn):
 	b.save()
 	flash("Updated {}".format(b.title))
 	return redirect(url_for(".view_inventory"))
+
+@inventory.route("/purchases/")
+def view_purchases():
+	time = request.args.get("time", "month")
+	one_year_ago = datetime.now() - relativedelta(years=1)
+	one_month_ago = datetime.now() - relativedelta(months=1)
+	one_week_ago = datetime.now() - relativedelta(weeks=1)
+	total_money = 0
+	if time == "year":
+		purchases = Purchase.select().where(Purchase.time > one_year_ago).order_by(Purchase.time.desc())
+	elif time == "week":
+		purchases = Purchase.select().where(Purchase.time > one_week_ago).order_by(Purchase.time.desc())
+	else:
+		purchases = Purchase.select().where(Purchase.time > one_month_ago).order_by(Purchase.time.desc())
+	for purchase in purchases:
+		total_money += purchase.total
+	return render_template("inventory/purchases.html", purchases=purchases, total=total_money)

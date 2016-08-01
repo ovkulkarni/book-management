@@ -1,7 +1,8 @@
 from flask import Blueprint, render_template, current_app, flash, url_for, request, session, flash, redirect
-from .models import Book
+from .models import Book, Purchase
 from .forms import AddToCartForm
 from utils import flash_errors
+from datetime import datetime
 
 
 cart = Blueprint("cart", __name__, template_folder="templates", url_prefix="/cart")
@@ -45,11 +46,14 @@ def complete_purchase():
 	if len(cart) < 1:
 		flash("No Books in Cart", "alert")
 		return redirect(url_for(".show_cart"))
+	p = Purchase.create(time=datetime.now())
 	for book in cart:
 		b = Book.get(Book.isbn == book.get("isbn", ""))
+		p.books.add(b)
 		b.count -= 1
 		b.save()
-	flash("Completed Purchase and Updated Inventory", "success")
+	p.save()
+	flash("Completed Purchase {} and Updated Inventory".format(p.id), "success")
 	return redirect(url_for('.clear_cart'))
 
 

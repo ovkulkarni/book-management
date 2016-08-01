@@ -4,3 +4,4 @@ Flask_WTF==0.12
 peewee==2.8.1
 requests==2.10.0
 WTForms==2.1
+python_dateutil==2.5.3
