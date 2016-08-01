@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="row">
+	<p><br /></p>
+</div>
+<div class="row">
+	<div class="callout">
+		<h1>Whoops! There was a problem processing your request. Please try again later.</h1>
+		<br />
+		<pre>{{ trace }}</pre>
+	</div>
+</div>
+{% endblock %}

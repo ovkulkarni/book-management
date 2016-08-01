@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% from "forms.html" import render_field %}
+{% block content %}
+<div><p><br /></p></div>
+<div class="row">
+	<div class="callout primary">
+		<form method="POST">
+			{{ form.csrf_token() }}
+			{{ render_field(form.title, placeholder="Book Title") }}
+			{{ render_field(form.author, placeholder="Book Author") }}
+			{{ render_field(form.publisher, placeholder="Book Publisher") }}
+			{{ render_field(form.year, placeholder="Publishing Year") }}
+			{{ render_field(form.isbn, placeholder="ISBN Number") }}
+			{{ render_field(form.price, placeholder="Price") }}
+			<button type="submit" class="button">Save</button>
+		</form>
+	</div>
+</div>
+{% endblock %}

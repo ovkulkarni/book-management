@@ -1,0 +1,11 @@
+body {
+	background-image: url("/static/background.png");
+}
+
+*  {
+	font-family: "Droid Sans Mono" !important;
+}
+
+.fa {
+	font-family: FontAwesome !important;
+}

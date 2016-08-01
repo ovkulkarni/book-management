@@ -1,0 +1,87 @@
+{% extends "base.html" %}
+{% from "forms.html" import render_field %}
+
+{% block content %}
+<div class="row">
+	<div class="large-10 columns">
+	</div>
+	<div class="large-2 columns">
+		<br />
+		<a href="{{ url_for('cart.clear_cart') }}" class="alert button"><i class="fa fa-trash"></i>&nbsp;Clear Cart</a></p></button>
+	</div>
+</div>
+{% if session.get('cart', None) %}
+	{% for book in session.get('cart') %}
+	<div class="row">
+		<div class="large-12 columns center">
+			<div class="callout">
+				<div class="row">
+					<div class="large-6 columns">
+						<h4>{{ book.title }}</h4>
+					</div>
+					<div class="large-2 columns">
+						<h5>${{ book.price }}</h5>
+					</div>
+				</div>
+				<div class="row">
+					<div class="large-6 columns">
+						<p>Author: {{ book.author }}</p>
+					</div>
+					<div class="large-6 columns">
+						<p>Count: {{ book.count }}</p>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	{% endfor %}
+{% else %}
+	<div class="row">
+		<div class="large-12 columns">
+			<div class="callout">
+				<h1>No Books in Cart</h1>
+			</div>
+		</div>
+	</div>
+{% endif %}
+
+	
+	<div class="row">
+		<form method="POST" id="isbn_add_form">
+		{{ form.csrf_token() }}
+		<div class="large-8 columns">
+			<div class="primary callout">
+				{{ render_field(form.isbn, placeholder="13 Digit ISBN Number", id="isbn_add_field", maxlength="13") }}
+			</div>
+		</div>
+		</form>
+		<div class="large-4 columns">
+			<div class="callout">
+				<div class="row">
+				<div class="large-6 columns">
+					<h5>Total:</h5>
+					<h3>${{ session.get('total', 0) }}</h3>
+				</div>
+				<div class="large-6 columns">
+					<p></p>
+					<form method="POST" action="{{ url_for('cart.complete_purchase') }}">
+						<input type="hidden" value="{{ csrf_token() }}" name="csrf_token">
+						<button type="submit" class="button">Complete Purchase</button>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+{% endblock %}
+{% block scripts %}
+<script type="text/javascript">
+	$(document).ready(function() {
+		$form = $("#isbn_add_form");
+		$("#isbn_add_field").on('input', function(){
+			if(/(978|979)\d{10}/.test($(this).val()) === true){
+				$form.submit()
+			}
+		});
+	});
+</script>
+{% endblock %}

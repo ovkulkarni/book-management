@@ -1,0 +1,75 @@
+{% set extra_css = extra_css | default(False) %}
+<html>
+<head>
+	<title>{% block title %}{{ config.APP_NAME }}{% endblock %}</title>
+	<meta charset="utf-8">
+	<meta http-equiv="x-ua-compatible" content="ie=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	
+	
+	<link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Droid+Sans+Mono" />
+	<link href="//maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-T8Gy5hrqNKT+hzMclPo118YTQO6cYprQmhrYwIiQ/3axmI1hQomh7Ud2hPOy8SP1" crossorigin="anonymous">
+
+	<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/foundation.css') }}" />
+	<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/app.css') }}" />
+	{% if extra_css %}
+		{% if extra_css is string %}
+			<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/{}.css'.format(extra_css)) }}">
+		{% elif extra_css is iterable %}
+	        {% for file in extra_css %}
+	        <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/{}.css'.format(file)) }}">
+	       	{% endfor %}
+       	{% endif %}
+    {% endif %}
+    <style type="text/css">
+    	{% block inline_css %}
+    	{% endblock %}
+    </style>
+</head>
+<body>
+	<div class="top-bar">
+	  <div class="top-bar-left">
+	  	<ul class="menu">
+	  		<li><h4><a href="{{ url_for('home_page') }}">{{ config.APP_NAME }}</a></h4></li>
+	  	</ul>
+	  </div>
+	  <div class="top-bar-right">
+	  	<ul class="menu">
+	  		<li><a href="{{ url_for('inventory.add_to_inventory') }}"><i class="fa fa-plus-square-o"></i><strong>Add</strong></a></li>
+	  		<li><a href="{{ url_for('inventory.view_inventory') }}"><i class="fa fa-archive"></i><strong>Inventory</strong></a></li>
+	  		<li><a href="{{ url_for('cart.show_cart') }}"><i class="fa fa-shopping-cart"></i><strong>Cart</strong>&nbsp;<span class="badge">{{ session.get('cart', []) | length }}</span></a></li>
+	  	</ul>
+	  </div>
+	</div>
+	<div id="content" class="container">
+		{% with messages = get_flashed_messages(with_categories=true) %}
+	        {% if messages %}
+	            {% for category, message in messages %}
+	                <div class="callout {{ category }}" data-closable>
+	                    <h5>{{ message.encode("utf-8") }}</h5>
+	                 <button class="close-button" aria-label="Dismiss" type="button" data-close>
+	    				<span aria-hidden="true">&times;</span>
+	  				</button>
+	                </div>
+	            {% endfor %}
+	        {% endif %}
+	    {% endwith %}
+	    {% block content %}
+	    {% endblock %}
+	    {% if version != "" %}
+	    <div class="row">
+	    	<p><br /></p>
+	    </div>
+	    <div class="row">
+	    	<div class="callout secondary">Version: {{ version }}</div>
+	    </div>
+	   	{% endif %}
+	</div>
+	<script type="text/javascript" src="{{ url_for('static', filename='js/vendor/jquery.js') }}"></script>
+	<script type="text/javascript" src="{{ url_for('static', filename='js/vendor/foundation.js') }}"></script>
+	<script type="text/javascript" src="{{ url_for('static', filename='js/vendor/what-input.js') }}"></script>
+	<script type="text/javascript" src="{{ url_for('static', filename='js/app.js') }}"></script>
+	{% block scripts %}
+	{% endblock %}
+</body>
+

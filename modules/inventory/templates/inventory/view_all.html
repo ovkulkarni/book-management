@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block content %}
+	<div><p><br /></p></div>
+	{% for book in books %}
+	{% if loop.index0 is divisibleby(2) %}
+	<div class="row">
+		{% endif %}
+		<div class="large-6 columns">
+			<div class="callout">
+				<h3>Title: {{ book.title }}</h3>
+				<h4>Cost: ${{ book.price }}</h4>
+				<h5>Count: {{ book.count }}</h5>
+				<h6>Author: {{ book.author }}</h6>
+				<p>ISBN: {{ book.isbn }}</p>
+				<a href="{{ url_for('inventory.edit_book', isbn=book.isbn) }}" class="button warning">Edit Book</a>
+			</div>
+		</div>
+	{% if loop.index is divisibleby(2) %}
+	</div>
+	{% endif %}
+	{% endfor %}
+{% endblock %}
