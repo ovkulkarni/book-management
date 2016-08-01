@@ -64,16 +64,6 @@ def create_app(environment):
     def home_page():
         return render_template("base.html")
 
-    @csrf.exempt
-    @app.route("/github/<key>/", methods=["POST"])
-    def git_hook(key):
-        if not app.config["ENVIRONMENT"] == "staging":
-            return make_response("Github Hook is disabled", 200)
-        if key != os.getenv("GITHUB_KEY", ""):
-            return make_response(render_template('csrf_error.html'), 400)
-        out = subprocess.check_output(["git", "pull"]).decode().strip()
-        return make_response(str(out), 200)
-
     return app
 
 if __name__ == '__main__':
