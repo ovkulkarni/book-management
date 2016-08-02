@@ -3,3 +3,4 @@ SECRET_KEY = "key"
 DB_PATH = "/home/okulkarni/book-management/bookstore.db"
 DISPLAY_DEBUG_INFO = True
 ENVIRONMENT = "staging"
+TEMPLATES_AUTO_RELOAD=True
