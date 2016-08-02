@@ -25,11 +25,15 @@ class Book(BaseModel):
 class Purchase(BaseModel):
 	time = DateTimeField(verbose_name="Purchase Date/Time")
 	books = ManyToManyField(Book, related_name="purchases")
+	total = IntegerField("Total")
 
 	@property
-	def total(self):
-		_total = 0
-		for book in self.books:
-			_total += book.price
-		return _total
+	def book(self):
+		if len(self.books) == 1:
+			return self.books[0]
+		elif len(self.books) == 0:
+			return "[deleted]"
+		else:
+			raise IntegrityError("Purchase Should Only Have 1 Book")
 	
+

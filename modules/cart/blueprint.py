@@ -3,6 +3,7 @@ from .models import Book, Purchase
 from .forms import AddToCartForm
 from utils import flash_errors
 from datetime import datetime
+from database import database
 
 
 cart = Blueprint("cart", __name__, template_folder="templates", url_prefix="/cart")
@@ -46,14 +47,19 @@ def complete_purchase():
 	if len(cart) < 1:
 		flash("No Books in Cart", "alert")
 		return redirect(url_for(".show_cart"))
-	p = Purchase.create(time=datetime.now())
 	for book in cart:
-		b = Book.get(Book.isbn == book.get("isbn", ""))
-		p.books.add(b)
-		b.count -= 1
-		b.save()
-	p.save()
-	flash("Completed Purchase {} and Updated Inventory".format(p.id), "success")
+		p = Purchase.create(time=datetime.now())
+		b = Book.get(Book.isbn == book.get("isbn"))
+		add_book_to_purchase(p, b)
+	flash("Completed Purchase and Updated Inventory", "success")
 	return redirect(url_for('.clear_cart'))
+
+@database.transaction()
+def add_book_to_purchase(purchase, book):
+	purchase.books.add(book)
+	purchase.total = book.price
+	book.count -= 1
+	purchase.save()
+	book.save()
 
 

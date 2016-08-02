@@ -18,12 +18,8 @@
 <div class="row">
 	<div class="columns">
 		<div class="callout">
-			<h2>Purchase {{ purchase.id }} - ${{ purchase.total }}</h2>
-			<h3>Time of Purchase: {{ purchase.time }}</h3>
-			<h5>Books Purchased:</h5>
-			{% for book in purchase.books %}
-			<p>&nbsp;&nbsp;{{ book.title }} - ${{ book.price }}</p>
-			{% endfor %}
+			<h3>{% if purchase.book is string %}{{ purchase.book }}{% else %}{{ purchase.book.title }}{% endif %} - ${{ purchase.total }}</h3>
+			<h4>Time of Purchase: {{ purchase.time }}</h4>
 		</div>
 	</div>
 </div>

@@ -35,6 +35,7 @@
 	  </div>
 	  <div class="top-bar-right">
 	  	<ul class="menu">
+	  		<li><a href="{{ url_for('inventory.view_purchases') }}"><i class="fa fa-usd"></i><strong>Purchases</strong></a></li>
 	  		<li><a href="{{ url_for('inventory.add_to_inventory') }}"><i class="fa fa-plus-square-o"></i><strong>Add</strong></a></li>
 	  		<li><a href="{{ url_for('inventory.view_inventory') }}"><i class="fa fa-archive"></i><strong>Inventory</strong></a></li>
 	  		<li><a href="{{ url_for('cart.show_cart') }}"><i class="fa fa-shopping-cart"></i><strong>Cart</strong>&nbsp;<span class="badge">{{ session.get('cart', []) | length }}</span></a></li>

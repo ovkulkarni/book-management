@@ -2,7 +2,7 @@ from flask import Blueprint, render_template, current_app, flash, url_for, reque
 from modules.cart.models import Book, Purchase
 from .forms import ISBNBookForm, ManualBookForm
 from utils import flash_errors, isbn_lookup
-from datetime import datetime
+from datetime import date
 from dateutil.relativedelta import relativedelta
 
 
@@ -71,9 +71,9 @@ def edit_book(isbn):
 @inventory.route("/purchases/")
 def view_purchases():
 	time = request.args.get("time", "month")
-	one_year_ago = datetime.now() - relativedelta(years=1)
-	one_month_ago = datetime.now() - relativedelta(months=1)
-	one_week_ago = datetime.now() - relativedelta(weeks=1)
+	one_year_ago = date.today() - relativedelta(years=1)
+	one_month_ago = date.today() - relativedelta(months=1)
+	one_week_ago = date.today() - relativedelta(weeks=1)
 	total_money = 0
 	if time == "year":
 		purchases = Purchase.select().where(Purchase.time > one_year_ago).order_by(Purchase.time.desc())
