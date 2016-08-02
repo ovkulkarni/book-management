@@ -37,7 +37,7 @@ def add_to_inventory():
 	b.count += 1
 	b.save()
 	flash("{} added to inventory. Count: {}".format(b.title, b.count), "success")
-	return redirect(url_for(".view_inventory"))
+	return redirect(url_for(".add_to_inventory"))
 
 @inventory.route("/add/manual/", methods=["GET", "POST"])
 def add_manually():
