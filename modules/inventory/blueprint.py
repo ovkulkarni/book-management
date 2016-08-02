@@ -1,10 +1,13 @@
-from flask import Blueprint, render_template, current_app, flash, url_for, request, session, flash, redirect
+from flask import Blueprint, render_template, current_app, flash, url_for, request, session, flash, redirect, send_from_directory
 from modules.cart.models import Book, Purchase
 from .forms import ISBNBookForm, ManualBookForm
 from utils import flash_errors, isbn_lookup
 from datetime import date
 from dateutil.relativedelta import relativedelta
-
+from os.path import dirname, realpath, isfile, join
+from os import getcwd, chdir
+from barcode.writer import ImageWriter
+import barcode
 
 inventory = Blueprint("inventory", __name__, template_folder="templates", url_prefix="/inventory")
 
@@ -84,3 +87,18 @@ def view_purchases():
 	for purchase in purchases:
 		total_money += purchase.total
 	return render_template("inventory/purchases.html", purchases=purchases, total=total_money)
+
+@inventory.route("/barcode/<isbn>/")
+def generate_barcode(isbn):
+	original_path = getcwd()
+	current_path = dirname(realpath(__file__))
+	barcode_path = join(current_path, "static/barcodes")
+	chdir(barcode_path)
+	if not isfile(join(barcode_path, "{}.png".format(isbn))):
+		code = barcode.get('isbn13', isbn, writer=ImageWriter())
+		filename = code.save(isbn)
+	chdir(original_path)
+	return send_from_directory(barcode_path, "{}.png".format(isbn))
+
+
+

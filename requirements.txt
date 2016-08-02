@@ -5,3 +5,4 @@ peewee==2.8.1
 requests==2.10.0
 WTForms==2.1
 python_dateutil==2.5.3
+pyBarcode==0.7

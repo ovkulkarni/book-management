@@ -1,3 +1,4 @@
 *.pyc
 venv
 *.db
+tarfiles/Imaging-1.1.7/*
