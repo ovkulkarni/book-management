@@ -25,7 +25,7 @@ class Book(BaseModel):
 class Purchase(BaseModel):
 	time = DateTimeField(verbose_name="Purchase Date/Time")
 	books = ManyToManyField(Book, related_name="purchases")
-	total = IntegerField("Total")
+        total = IntegerField("Purchase Total")
 
 	@property
 	def book(self):
