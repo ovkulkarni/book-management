@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% from "forms.html" import render_field %}
+
+{% block content %}
+<div class="row">
+    <p><br /></p>
+</div>
+
+
+<div class="row">
+    <form method="POST" id="isbn_add_form">
+        {{ form.csrf_token() }}
+        <div class="columns">
+            <div class="primary callout">
+                {{ render_field(form.isbn, placeholder="13 Digit ISBN Number", id="isbn_add_field", maxlength="13", autofocus=True) }}
+            </div>
+        </div>
+    </form>
+</div>
+{% endblock %}
+{% block scripts %}
+<script type="text/javascript">
+    $(document).ready(function() {
+            $form = $("#isbn_add_form");
+            $("#isbn_add_field").on('input', function(){
+                if(/(978|979)\d{10}/.test($(this).val()) === true){
+                $form.submit()
+                }
+                });
+            });
+</script>
+{% endblock %}

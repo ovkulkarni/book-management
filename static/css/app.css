@@ -3,11 +3,3 @@ body {
 	background-repeat: repeat-y;
 	background-size: 100% 100%;
 }
-
-*  {
-	font-family: "Droid Sans Mono" !important;
-}
-
-.fa {
-	font-family: FontAwesome !important;
-}
