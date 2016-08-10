@@ -13,4 +13,4 @@ class ManualBookForm(Form):
 	year = StringField("Publishing Year", [validators.Optional()])
 	isbn = StringField("ISBN Number", [validators.DataRequired(), 
 		validators.Regexp(r'(978|979)\d{10}', message="Please enter a valid 13-digit ISBN Number.")])
-	price = IntegerField("Book Price", [validators.Optional()])
+	price = IntegerField("Book Price", [validators.DataRequired()])
