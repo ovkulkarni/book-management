@@ -30,7 +30,7 @@ def add_to_inventory():
 			flash("Invalid ISBN", "alert")
 			return redirect(url_for(".add_manually"))
 		if len(data.get("authors", [])) > 0:
-			author = data["authors"][0]
+			author = ', '.join(data.get("authors"))
 		else:
 			author = "Unknown"
 		if not form.price.data:
