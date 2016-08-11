@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block content %}
+<div><p><br /></p></div>
+<div class="row">
+	<div class="callout primary">
+		<form method="POST">
+			<input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
+			<input type="password" name="original_password" placeholder="Current Password" required />
+			<input type="password" name="new_password" placeholder="New Password" required />
+			<input type="password" name="confirm_new_password" placeholder="Confirm New Password" required />
+			<button type="submit" class="button warning">Change</button>
+		</form>
+	</div>
+</div>
+{% endblock %}

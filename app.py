@@ -1,5 +1,5 @@
 from database import database
-from flask import Flask, render_template, flash, redirect, make_response, request, session
+from flask import Flask, render_template, flash, redirect, make_response, request, session, g
 from flask_wtf.csrf import CsrfProtect
 import logging
 import subprocess
@@ -27,9 +27,11 @@ def create_app(environment):
 
     from modules.inventory.blueprint import inventory
     from modules.cart.blueprint import cart
+    from modules.account.blueprint import account
 
     app.register_blueprint(cart)
     app.register_blueprint(inventory)
+    app.register_blueprint(account)
 
     csrf.init_app(app)
     
@@ -63,6 +65,13 @@ def create_app(environment):
     @app.route("/")
     def home_page():
         return render_template("base.html")
+
+    @app.before_request
+    def set_user():
+        if not g.user:
+            g.user = None
+        if not session.get("logged_in", None):
+            session["logged_in"] = False
 
     return app
 

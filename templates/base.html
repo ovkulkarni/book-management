@@ -34,10 +34,19 @@
 	  </div>
 	  <div class="top-bar-right">
 	  	<ul class="menu">
+	  		{% if g.user %}{% if g.user.admin %}
+	  		<li><a href="{{ url_for('account.add_account') }}"><i class="fa fa-plus-circle"></i><strong>Add Account</strong></a></li>
 	  		<li><a href="{{ url_for('inventory.view_purchases') }}"><i class="fa fa-usd"></i><strong>Purchases</strong></a></li>
-	  		<li><a href="{{ url_for('inventory.add_to_inventory') }}"><i class="fa fa-plus-square-o"></i><strong>Add</strong></a></li>
+	  		<li><a href="{{ url_for('inventory.add_to_inventory') }}"><i class="fa fa-plus-square-o"></i><strong>Add Books</strong></a></li>
 	  		<li><a href="{{ url_for('inventory.view_inventory') }}"><i class="fa fa-archive"></i><strong>Inventory</strong></a></li>
+	  		{% endif %}{% endif %}
+	  		{% if not session.get("logged_in") %}
+	  		<li><a href="{{ url_for('account.login') }}"><i class="fa fa-sign-in"></i><strong>Login</strong></a></li>
+	  		{% else %}
+	  		<li><a href="{{ url_for('account.info') }}"><i class="fa fa-info-circle"></i><strong>My Account</strong></a></li>
 	  		<li><a href="{{ url_for('cart.show_cart') }}"><i class="fa fa-shopping-cart"></i><strong>Cart</strong>&nbsp;<span class="badge">{{ session.get('cart', []) | length }}</span></a></li>
+	  		<li><a href="{{ url_for('account.logout') }}"><i class="fa fa-sign-out"></i><strong>Logout</strong></a></li>
+	  		{% endif %}
 	  	</ul>
 	  </div>
 	</div>
@@ -71,5 +80,10 @@
 	<script type="text/javascript" src="{{ url_for('static', filename='js/app.js') }}"></script>
 	{% block scripts %}
 	{% endblock %}
+	<!-- 
+		debug
+		g.user = {{ g.user }}
+	-->
 </body>
+</html>
 

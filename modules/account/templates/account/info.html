@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% from "forms.html" import render_field %}
+{% block content %}
+<div><p><br /></p></div>
+<div class="row">
+	<div class="callout primary">
+		<form method="POST">
+			<input type="hidden" name="change_password_form" value="false" />
+			{{ form.csrf_token() }}
+			{{ render_field(form.email, placeholder="Email Address") }}
+			<button type="submit" class="button">Update</button>
+		</form>
+		<div class="row">
+			<div class="columns">
+				<a href="{{ url_for('account.change_password') }}" class="button warning">Change Password</a>
+			</div>
+		</div>
+	</div>
+
+</div>
+
+
+{% endblock %}
