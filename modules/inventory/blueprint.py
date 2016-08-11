@@ -7,16 +7,20 @@ from dateutil.relativedelta import relativedelta
 from os.path import dirname, realpath, isfile, join
 from os import getcwd, chdir
 from barcode.writer import ImageWriter
+from decorators import admin_required
 import barcode
+
 
 inventory = Blueprint("inventory", __name__, template_folder="templates", url_prefix="/inventory")
 
 @inventory.route("/")
+@admin_required
 def view_inventory():
 	books = Book.select().order_by(+Book.id)
 	return render_template("inventory/view_all.html", books=books)
 
 @inventory.route("/add/", methods=["GET", "POST"])
+@admin_required
 def add_to_inventory():
 	form = ISBNBookForm(request.form)
 	if not form.validate_on_submit():
@@ -43,6 +47,7 @@ def add_to_inventory():
 	return redirect(url_for(".add_to_inventory"))
 
 @inventory.route("/add/manual/", methods=["GET", "POST"])
+@admin_required
 def add_manually():
 	form = ManualBookForm(request.form)
 	if not form.validate_on_submit():
@@ -55,6 +60,7 @@ def add_manually():
 	return redirect(url_for(".view_inventory"))
 
 @inventory.route("/edit/<isbn>/", methods=["GET", "POST"])
+@admin_required
 def edit_book(isbn):
 	b = Book.get(Book.isbn == isbn)
 	form = ManualBookForm(request.form, b)
@@ -72,6 +78,7 @@ def edit_book(isbn):
 	return redirect(url_for(".view_inventory"))
 
 @inventory.route("/purchases/")
+@admin_required
 def view_purchases():
 	time = request.args.get("time", "month")
 	one_year_ago = date.today() - relativedelta(years=1)
@@ -89,6 +96,7 @@ def view_purchases():
 	return render_template("inventory/purchases.html", purchases=purchases, total=total_money)
 
 @inventory.route("/barcode/<isbn>/")
+@admin_required
 def generate_barcode(isbn):
 	original_path = getcwd()
 	current_path = dirname(realpath(__file__))

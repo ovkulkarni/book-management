@@ -4,11 +4,13 @@ from .forms import AddToCartForm
 from utils import flash_errors
 from datetime import datetime
 from database import database
+from decorators import login_required
 
 
 cart = Blueprint("cart", __name__, template_folder="templates", url_prefix="/cart")
 
 @cart.route("/", methods=["GET", "POST"])
+@login_required
 def show_cart():
     if not session.get("cart", None):
         session["cart"] = []
@@ -36,12 +38,14 @@ def show_cart():
     return redirect(url_for('.show_cart'))
 
 @cart.route("/clear/")
+@login_required
 def clear_cart():
     session["cart"] = []
     session["total"] = 0
     return redirect(url_for('.show_cart'))
 
 @cart.route("/purchase/", methods=["POST"])
+@login_required
 def complete_purchase():
     cart = session.get("cart", [])
     if len(cart) < 1:
@@ -55,6 +59,7 @@ def complete_purchase():
     return redirect(url_for('.clear_cart'))
 
 @cart.route("/returns/", methods=["GET", "POST"])
+@login_required
 def return_book():
     form = AddToCartForm(request.form)
     if not form.validate_on_submit():
