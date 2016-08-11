@@ -1,6 +1,7 @@
 from database import BaseModel
 from peewee import *
 from playhouse.fields import ManyToManyField
+from modules.account.models import Account
 
 class Book(BaseModel):
     title = CharField(128, verbose_name="Book Title")
@@ -25,6 +26,7 @@ class Book(BaseModel):
 class Purchase(BaseModel):
     time = DateTimeField(verbose_name="Purchase Date/Time")
     books = ManyToManyField(Book, related_name="purchases")
+    seller = ForeignKeyField(Account)
     total = IntegerField("Purchase Total")
 
     @property

@@ -3,15 +3,16 @@
 {% block content %}
 <div><p><br /></p></div>
 <div class="row">
-	<div class="callout primary">
-		<form method="POST">
-			{{ form.csrf_token() }}
-			{{ render_field(form.email, placeholder="Email Address") }}
-			{{ render_field(form.password, placeholder="Password") }}
-			{{ render_field(form.confirm, placeholder="Confirm Password") }}
-			<p>{{ render_field(form.admin) }}</p>
-			<button type="submit" class="button">Create</button>
-		</form>
-	</div>
+    <div class="callout primary">
+        <form method="POST">
+            {{ form.csrf_token() }}
+            {{ render_field(form.name, placeholder="Full Name") }}
+            {{ render_field(form.email, placeholder="Email Address") }}
+            {{ render_field(form.password, placeholder="Password") }}
+            {{ render_field(form.confirm, placeholder="Confirm Password") }}
+            <p>{{ render_field(form.admin) }}</p>
+            <button type="submit" class="button">Create</button>
+        </form>
+    </div>
 </div>
 {% endblock %}

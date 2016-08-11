@@ -20,6 +20,7 @@
         <div class="callout"{% if purchase.total < 0 %} style="background-color:red; color:white;"{% endif %}>
             <h3>{% if purchase.book is string %}{{ purchase.book }}{% else %}{{ purchase.book.title }}{% endif %} - ${% if purchase.total < 0 %}{{ purchase.total * -1 }}{% else %}{{ purchase.total }}{% endif %}</h3>
 			<h4>Time of Purchase: {{ purchase.time }}</h4>
+            <h5>Seller: {{ purchase.seller.name }}</h5>
 		</div>
 	</div>
 </div>

@@ -28,7 +28,7 @@ def create_db():
 def create_first_user():
     """Create the original user"""
     if not Account.select().where(Account.email == "okulkarni@okulkarni.me").count() > 0:
-        a = Account.create(email="okulkarni@okulkarni.me", password=hash_password("password123"), admin=True)
+        a = Account.create(name="Omkar Kulkarni", email="okulkarni@okulkarni.me", password=hash_password("password123"), admin=True)
         a.save()
         print(a)
         return True

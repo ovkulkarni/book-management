@@ -50,7 +50,7 @@ def add_account():
 	if matching_emails.count() > 0:
 		flash("An account already exists with that email.", "alert")
 		return redirect(url_for('.add_account'))
-	a = Account.create(email=form.email.data, password=hash_password(form.password.data), admin=admin_account)
+	a = Account.create(name=form.name.data, email=form.email.data, password=hash_password(form.password.data), admin=admin_account)
 	a.save()
 	flash("Account Created", "success")
 	return redirect(url_for('.add_account'))

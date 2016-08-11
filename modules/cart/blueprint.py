@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, current_app, flash, url_for, request, session, flash, redirect
+from flask import Blueprint, render_template, current_app, flash, url_for, request, session, flash, redirect, g
 from .models import Book, Purchase
 from .forms import AddToCartForm
 from utils import flash_errors
@@ -52,7 +52,7 @@ def complete_purchase():
         flash("No Books in Cart", "alert")
         return redirect(url_for(".show_cart"))
     for book in cart:
-        p = Purchase.create(time=datetime.now())
+        p = Purchase.create(time=datetime.now(), seller=g.user)
         b = Book.get(Book.isbn == book.get("isbn"))
         add_book_to_purchase(p, b)
     flash("Completed Purchase and Updated Inventory", "success")
@@ -70,7 +70,7 @@ def return_book():
     except Book.DoesNotExist:
         flash("Book Does Not Exist In Inventory", "alert")
         return redirect(url_for('.return_book'))
-    p = Purchase.create(time=datetime.now())
+    p = Purchase.create(time=datetime.now(), seller=g.user)
     return_book_transaction(p, b)
     flash("Completed Return")
     return redirect(url_for('.return_book'))
