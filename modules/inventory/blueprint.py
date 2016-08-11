@@ -68,7 +68,7 @@ def edit_book(isbn):
 	b.isbn = form.isbn.data
 	b.price = form.price.data
 	b.save()
-	flash("Updated {}".format(b.title))
+	flash("Updated {}".format(b.title), "success")
 	return redirect(url_for(".view_inventory"))
 
 @inventory.route("/purchases/")
