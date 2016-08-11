@@ -14,4 +14,5 @@ class CreateAccountForm(Form):
     admin = BooleanField("Admin Account")
 
 class ChangeEmailForm(Form):
-    email = StringField("Email Address", [validators.DataRequired(), validators.Email()])
+   name = StringField("Full Name", [validators.DataRequired()])
+   email = StringField("Email Address", [validators.DataRequired(), validators.Email()])

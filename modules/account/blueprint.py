@@ -15,8 +15,9 @@ def info():
 		flash_errors(form)
 		return render_template("account/info.html", form=form)
 	g.user.email = form.email.data
+	g.user.name = form.name.data
 	g.user.save()
-	flash("Updated Email", "success")
+	flash("Updated Info", "success")
 	return redirect(url_for('.info'))
 
 @account.route("/change_password/", methods=["GET", "POST"])

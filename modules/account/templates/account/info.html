@@ -7,6 +7,7 @@
 		<form method="POST">
 			<input type="hidden" name="change_password_form" value="false" />
 			{{ form.csrf_token() }}
+			{{ render_field(form.name, placeholder="Full Name" )}}
 			{{ render_field(form.email, placeholder="Email Address") }}
 			<button type="submit" class="button">Update</button>
 		</form>
