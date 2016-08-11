@@ -29,10 +29,10 @@ def add_to_inventory():
 		if not data:
 			flash("Invalid ISBN", "alert")
 			return redirect(url_for(".add_manually"))
-		if len(data["authors"]) > 0:
+		if len(data.get("authors", [])) > 0:
 			author = data["authors"][0]
 		else:
-			author = None
+			author = "Unknown"
 		if not form.price.data:
 			flash("Please Enter a Price", "alert")
 			return redirect(url_for(".add_to_inventory"))
