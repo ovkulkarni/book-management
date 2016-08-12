@@ -5,12 +5,23 @@
 	<div class="columns">
 		<div class="callout primary">
 			<form id="timeForm">
-				<label>Filter By:
-				<select name="time" id="timeSelect">
-					<option value="week" {% if request.args.get("time", "month") == "week" %}selected disabled {% endif %}>Week</option>
-					<option value="month" {% if request.args.get("time", "month") == "month" %}selected disabled {% endif %}>Month</option>
-					<option value="year" {% if request.args.get("time", "month") == "year" %}selected disabled {% endif %}>Year</option>
-				</select>
+				<label>Time Filter:
+					<select name="time" id="timeSelect">
+						<option value="week" {% if request.args.get("time") == "week" %}selected disabled {% endif %}>Week</option>
+						<option value="month" {% if request.args.get("time") == "month" %}selected disabled {% endif %}>Month</option>
+						<option value="year" {% if request.args.get("time") == "year" %}selected disabled {% endif %}>Year</option>
+					</select>
+				</label>
+			</form>
+			<form id="userForm">
+				<label>User Filter:
+					<select name="user_id" id="userSelect">
+						{% for user in Account.select().order_by(+Account.id) %}
+						<option value="{{ user.id }}" {% if int(request.args.get("user_id", -1)) == user.id %}selected disabled {% endif %}>{{ user.name }}</option>
+						{% endfor %}
+					</select>
+				</label>
+			</form>
 		</div>
 	</div>
 </div>
@@ -36,9 +47,13 @@
 {% block scripts %}
 <script type="text/javascript">
 	$(document).ready(function() {
-		$form = $("#timeForm");
+		$timeform = $("#timeForm");
 		$("#timeSelect").change(function(){
-			$form.submit()
+			$timeform.submit()
+		});
+		$userform = $("#userForm");
+		$("#userSelect").change(function(){
+			$userform.submit()
 		});
 	});
 </script>

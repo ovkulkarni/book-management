@@ -1,5 +1,6 @@
 from flask import Blueprint, render_template, current_app, flash, url_for, request, session, flash, redirect, send_from_directory
 from modules.cart.models import Book, Purchase
+from modules.account.models import Account
 from .forms import ISBNBookForm, ManualBookForm
 from utils import flash_errors, isbn_lookup
 from datetime import date
@@ -13,6 +14,9 @@ import barcode
 
 inventory = Blueprint("inventory", __name__, template_folder="templates", url_prefix="/inventory")
 
+@inventory.context_processor
+def expose_models():
+	return dict(Account=Account, int=int)
 @inventory.route("/")
 @admin_required
 def view_inventory():
@@ -80,17 +84,29 @@ def edit_book(isbn):
 @inventory.route("/purchases/")
 @admin_required
 def view_purchases():
-	time = request.args.get("time", "month")
-	one_year_ago = date.today() - relativedelta(years=1)
-	one_month_ago = date.today() - relativedelta(months=1)
-	one_week_ago = date.today() - relativedelta(weeks=1)
-	total_money = 0
-	if time == "year":
-		purchases = Purchase.select().where(Purchase.time > one_year_ago).order_by(Purchase.time.desc())
-	elif time == "week":
-		purchases = Purchase.select().where(Purchase.time > one_week_ago).order_by(Purchase.time.desc())
+	if request.args.get("time", None):
+		time = request.args.get("time", "month")
+		one_year_ago = date.today() - relativedelta(years=1)
+		one_month_ago = date.today() - relativedelta(months=1)
+		one_week_ago = date.today() - relativedelta(weeks=1)
+		if time == "year":
+			purchases = Purchase.select().where(Purchase.time > one_year_ago).order_by(Purchase.time.desc())
+		elif time == "week":
+			purchases = Purchase.select().where(Purchase.time > one_week_ago).order_by(Purchase.time.desc())
+		else:
+			purchases = Purchase.select().where(Purchase.time > one_month_ago).order_by(Purchase.time.desc())
+	elif request.args.get("user_id", None):
+		user_id = int(request.args.get("user_id"))
+		try:
+			a = Account.get(Account.id == user_id)
+			flash("Showing purchases created by {}".format(a.name), "success")
+			purchases = Purchase.select().where(Purchase.seller == a).order_by(Purchase.time.desc())
+		except Account.DoesNotExist:
+			flash("Invalid User ID", "alert")
+			return redirect(url_for('.view_purchases'))
 	else:
-		purchases = Purchase.select().where(Purchase.time > one_month_ago).order_by(Purchase.time.desc())
+		purchases = Purchase.select().order_by(Purchase.time.desc())
+	total_money = 0
 	for purchase in purchases:
 		total_money += purchase.total
 	return render_template("inventory/purchases.html", purchases=purchases, total=total_money)
