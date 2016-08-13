@@ -3,7 +3,7 @@ from utils import flash_errors
 from .localutils import generate_inventory_spreadsheet, generate_purchase_spreadsheet
 from modules.cart.models import Purchase, Book
 from modules.account.models import Account
-from decorators import admin_required, after_this_request
+from decorators import admin_required
 from datetime import date
 from dateutil.relativedelta import relativedelta
 
