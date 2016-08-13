@@ -130,16 +130,17 @@ def generate_barcode(isbn):
 @inventory.route("/search/", methods=["GET", "POST"])
 @login_required
 def search_for_book():
+	all_books = Book.select().order_by(+Book.title)
 	form = SearchForm(request.form)
 	if not form.validate_on_submit():
 		flash_errors(form)
-		return render_template("inventory/search.html", form=form)
+		return render_template("inventory/search.html", form=form, all_books=all_books)
 	term = form.query.data
 	books = Book.select().where((Book.isbn.contains(term)) | 
 								(Book.title.contains(term)) | 
 								(Book.alt_code.contains(term)) | 
 								(Book.author.contains(term)) )
-	return render_template("inventory/results.html", books=books, form=form)
+	return render_template("inventory/results.html", books=books, form=form, all_books=all_books)
 
 
 

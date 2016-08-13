@@ -6,7 +6,7 @@
 		<div class="callout primary">
 			<form method="POST">
 				{{ form.csrf_token() }}
-				{{ render_field(form.query, placeholder="Search Term") }}
+				{{ render_field(form.query, placeholder="Search Term", id="search-box") }}
 				<button type="submit" class="button">Search</button>
 			</form>
 		</div>
@@ -48,4 +48,16 @@
 	</div>
 	{% endif %}
 	{% endfor %}
+{% endblock %}
+{% block scripts %}
+<script type="text/javascript">
+	all_books = [];
+	{% for book in all_books %}
+	all_books.push("{{ book.title }}");
+	all_books.push("{{ book.author }}")
+	{% endfor %}
+	$("#search-box").autocomplete({
+		source: all_books
+	});
+</script>
 {% endblock %}

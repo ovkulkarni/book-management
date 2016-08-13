@@ -47,33 +47,20 @@ def clear_cart():
 @cart.route("/purchase/", methods=["POST"])
 @login_required
 def complete_purchase():
+    method = request.form.get("method", "sale")
     cart = session.get("cart", [])
     if len(cart) < 1:
         flash("No Books in Cart", "alert")
         return redirect(url_for(".show_cart"))
     for book in cart:
-        p = Purchase.create(time=datetime.now(), seller=g.user)
+        p = Purchase.create(time=datetime.now(), seller=g.user, method=method)
         b = Book.get(Book.isbn == book.get("isbn"))
-        add_book_to_purchase(p, b)
+        if method == "return":
+            return_book_transaction(p, b)
+        else:
+            add_book_to_purchase(p, b)
     flash("Completed Purchase and Updated Inventory", "success")
     return redirect(url_for('.clear_cart'))
-
-@cart.route("/returns/", methods=["GET", "POST"])
-@login_required
-def return_book():
-    form = AddToCartForm(request.form)
-    if not form.validate_on_submit():
-        flash_errors(form)
-        return render_template("cart/return.html", form=form)
-    try:
-        b = Book.get(Book.isbn == form.isbn.data)
-    except Book.DoesNotExist:
-        flash("Book Does Not Exist In Inventory", "alert")
-        return redirect(url_for('.return_book'))
-    p = Purchase.create(time=datetime.now(), seller=g.user)
-    return_book_transaction(p, b)
-    flash("Completed Return")
-    return redirect(url_for('.return_book'))
 
 @database.transaction()
 def add_book_to_purchase(purchase, book):
