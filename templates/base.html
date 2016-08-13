@@ -44,8 +44,17 @@
 	  			</ul>
 	  		</li>
 	  		<li><a href="{{ url_for('inventory.add_to_inventory') }}"><i class="fa fa-plus-square-o"></i><strong>Add Books</strong></a></li>
-	  		<li><a href="{{ url_for('inventory.view_inventory') }}"><i class="fa fa-archive"></i><strong>Inventory</strong></a></li>
-	  		{% endif %}{% endif %}
+	  		<li>
+	  			<a href="#"><i class="fa fa-archive"></i><strong>Inventory</strong></a>
+	  			<ul class="menu">
+	  				<li><a href="{{ url_for('inventory.search_for_book') }}"><i class="fa fa-search"></i><strong>Search</strong></a></li>
+	  				<li><a href="{{ url_for('inventory.view_inventory') }}"><i class="fa fa-file-excel-o"></i><strong>Spreadsheet</strong></a></li>
+	  			</ul>
+	  		</li>
+	  		{% else %}
+	  		<li><a href="{{ url_for('inventory.search_for_book') }}"><i class="fa fa-search"></i><strong>Search</strong></a></li>
+	  		{% endif %}
+	  		{% endif %}
 	  		{% if not session.get("logged_in") %}
 	  		<li><a href="{{ url_for('account.login') }}"><i class="fa fa-sign-in"></i><strong>Login</strong></a></li>
 	  		{% else %}

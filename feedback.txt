@@ -1,0 +1,4 @@
+- inventory filtering by quantity -- done
+- removing single items from cart
+- radio buttons for damaged, gift, sale, or return
+- search for items -- done

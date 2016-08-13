@@ -9,6 +9,7 @@ class Book(BaseModel):
     publisher = CharField(128, verbose_name="Book Publisher", null=True)
     year = DateField(formats=["%Y"], verbose_name="Publishing Year", null=True)
     isbn = CharField(13, verbose_name="Book ISBN", unique=True)
+    alt_code = CharField(10, verbose_name="Alternate Code (SKU)", unique=True, null=True)
     price = IntegerField(default=7, verbose_name="Book Price")
     count = IntegerField(default=0, verbose_name="Book Count")
 

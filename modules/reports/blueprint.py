@@ -22,7 +22,10 @@ def index():
 @reports.route("/generate/inventory/", methods=["POST"])
 @admin_required
 def generate_inventory_reports():
-	books = Book.select().order_by(+Book.title)
+	if request.form.get("max_quantity", None):
+		books = Book.select().where(Book.count <= int(request.form.get("max_quantity"))).order_by(+Book.title)
+	else:
+		books = Book.select().order_by(+Book.title)
 	spreadsheet_path = generate_inventory_spreadsheet(books)
 	return send_file(spreadsheet_path, mimetype="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", attachment_filename="report.xlsx")
 

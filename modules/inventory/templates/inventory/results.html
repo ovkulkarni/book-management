@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+{% from "forms.html" import render_field %}
+{% block content %}
+	<div><p><br /></p></div>
+	<div class="row">
+		<div class="callout primary">
+			<form method="POST">
+				{{ form.csrf_token() }}
+				{{ render_field(form.query, placeholder="Search Term") }}
+				<button type="submit" class="button">Search</button>
+			</form>
+		</div>
+	</div>
+	{% if books.count() == 0 %}
+	<div class="row">
+		<div class="columns">
+			<div class="alert callout">
+				<h1>No Books Found</h1>
+			</div>
+		</div>
+	</div>
+	{% endif %}
+	{% for book in books %}
+	{% if loop.index0 is divisibleby(2) %}
+	<div class="row">
+		{% endif %}
+		<div class="large-6 columns">
+			<div class="callout">
+				<h3>Title: {{ book.title }}</h3>
+				<h4>Cost: ${{ book.price }}</h4>
+				<h5>Count: {{ book.count }}</h5>
+				<h6>Author: {{ book.author }}</h6>
+				<p>ISBN: {{ book.isbn }}</p>
+				<p>SKU: {{ book.alt_code }}</p>
+				{% if g.user.admin %}
+				<div class="row">
+					<div class="large-6 columns">
+						<a href="{{ url_for('inventory.edit_book', isbn=book.isbn) }}" class="button warning">Edit Book</a>
+					</div>
+					<div class="large-6 columns">
+						<a href="{{ url_for('inventory.generate_barcode', isbn=book.isbn) }}" class="button secondary">View Barcode</a>
+					</div>
+				</div>
+				{% endif %}
+			</div>
+		</div>
+	{% if loop.index is divisibleby(2) %}
+	</div>
+	{% endif %}
+	{% endfor %}
+{% endblock %}

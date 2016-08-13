@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% from "forms.html" import render_field %}
+{% block content %}
+<div><p><br /></p></div>
+<div class="row">
+	<div class="callout primary">
+		<form method="POST">
+			{{ form.csrf_token() }}
+			{{ render_field(form.query, placeholder="Search Term") }}
+			<button type="submit" class="button">Search</button>
+		</form>
+	</div>
+</div>
+{% endblock %}

@@ -5,6 +5,7 @@ import logging
 import subprocess
 import traceback
 import os
+import glob
 
 
 log_formatter = logging.Formatter('''
@@ -70,7 +71,9 @@ def create_app(environment):
 
     @app.after_request
     def remove_spreadsheets(r):
-        os.system("rm *.xlsx")
+        for file in glob.glob("*.xlsx"):
+            print("Deleting {}".format(file))
+            os.remove(file)
         return r
     
     return app

@@ -1,14 +1,14 @@
 from flask import Blueprint, render_template, current_app, flash, url_for, request, session, flash, redirect, send_from_directory
 from modules.cart.models import Book, Purchase
 from modules.account.models import Account
-from .forms import ISBNBookForm, ManualBookForm
+from .forms import ISBNBookForm, ManualBookForm, SearchForm
 from utils import flash_errors, isbn_lookup
 from datetime import date
 from dateutil.relativedelta import relativedelta
 from os.path import dirname, realpath, isfile, join
 from os import getcwd, chdir
 from barcode.writer import ImageWriter
-from decorators import admin_required
+from decorators import admin_required, login_required
 import barcode
 
 
@@ -21,8 +21,7 @@ def expose_models():
 @inventory.route("/")
 @admin_required
 def view_inventory():
-	books = Book.select().order_by(+Book.id)
-	return render_template("inventory/view_all.html", books=books)
+	return render_template("inventory/view_all.html")
 
 @inventory.route("/add/", methods=["GET", "POST"])
 @admin_required
@@ -46,7 +45,7 @@ def add_to_inventory():
 			flash("Please Enter a Price", "alert")
 			return redirect(url_for(".add_to_inventory"))
 		b = Book.create(title=data.get("title"), author=author, publisher=data.get("publisher"), year=data.get("publishedDate", "").split("-")[0], isbn=form.isbn.data, price=form.price.data)
-	b.count += 1
+	b.count += int(form.quantity.data)
 	b.save()
 	flash("{} added to inventory. Count: {}".format(b.title, b.count), "success")
 	return redirect(url_for(".add_to_inventory"))
@@ -58,7 +57,7 @@ def add_manually():
 	if not form.validate_on_submit():
 		flash_errors(form)
 		return render_template("inventory/manual.html", form=form)
-	b = Book.create(title=form.title.data, author=form.author.data, publisher=form.publisher.data, year=form.year.data, isbn=form.isbn.data, price=form.price.data)
+	b = Book.create(title=form.title.data, author=form.author.data, publisher=form.publisher.data, year=form.year.data, isbn=form.isbn.data, alt_code=form.alt_code.data, price=form.price.data)
 	b.count += 1
 	b.save()
 	flash("{} added to inventory. Count: {}".format(b.title, b.count), "success")
@@ -77,6 +76,7 @@ def edit_book(isbn):
 	b.publisher = form.publisher.data
 	b.year = form.year.data
 	b.isbn = form.isbn.data
+	b.alt_code = form.alt_code.data
 	b.price = form.price.data
 	b.save()
 	flash("Updated {}".format(b.title), "success")
@@ -94,6 +94,8 @@ def view_purchases():
 			purchases = Purchase.select().where(Purchase.time > one_year_ago).order_by(Purchase.time.desc())
 		elif time == "week":
 			purchases = Purchase.select().where(Purchase.time > one_week_ago).order_by(Purchase.time.desc())
+		elif time == "today":
+			purchases = Purchase.select().where(Purchase.time > date.today()).order_by(Purchase.time.desc())
 		else:
 			purchases = Purchase.select().where(Purchase.time > one_month_ago).order_by(Purchase.time.desc())
 	elif request.args.get("user_id", None):
@@ -124,6 +126,20 @@ def generate_barcode(isbn):
 		filename = code.save(isbn)
 	chdir(original_path)
 	return send_from_directory(barcode_path, "{}.png".format(isbn))
+
+@inventory.route("/search/", methods=["GET", "POST"])
+@login_required
+def search_for_book():
+	form = SearchForm(request.form)
+	if not form.validate_on_submit():
+		flash_errors(form)
+		return render_template("inventory/search.html", form=form)
+	term = form.query.data
+	books = Book.select().where((Book.isbn.contains(term)) | 
+								(Book.title.contains(term)) | 
+								(Book.alt_code.contains(term)) | 
+								(Book.author.contains(term)) )
+	return render_template("inventory/results.html", books=books, form=form)
 
 
 
