@@ -33,10 +33,16 @@
 	  	</ul>
 	  </div>
 	  <div class="top-bar-right">
-	  	<ul class="menu">
+	  	<ul class="dropdown menu" data-dropdown-menu>
 	  		{% if g.user %}{% if g.user.admin %}
 	  		<li><a href="{{ url_for('account.add_account') }}"><i class="fa fa-plus-circle"></i><strong>Add Account</strong></a></li>
-	  		<li><a href="{{ url_for('inventory.view_purchases') }}"><i class="fa fa-usd"></i><strong>Purchases</strong></a></li>
+	  		<li>
+	  			<a href="#"><i class="fa fa-usd"></i><strong>Reporting</strong></a>
+	  			<ul class="menu">
+	  				<li><a href="{{ url_for('inventory.view_purchases') }}"><i class="fa fa-globe"></i><strong>Online</strong></a></li>
+	  				<li><a href="{{ url_for('reports.index') }}"><i class="fa fa-file-excel-o"></i><strong>Download</strong></a></li>
+	  			</ul>
+	  		</li>
 	  		<li><a href="{{ url_for('inventory.add_to_inventory') }}"><i class="fa fa-plus-square-o"></i><strong>Add Books</strong></a></li>
 	  		<li><a href="{{ url_for('inventory.view_inventory') }}"><i class="fa fa-archive"></i><strong>Inventory</strong></a></li>
 	  		{% endif %}{% endif %}

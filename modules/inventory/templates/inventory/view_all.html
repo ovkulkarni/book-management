@@ -1,6 +1,13 @@
 {% extends "base.html" %}
 {% block content %}
 	<div><p><br /></p></div>
+	<div class="row">
+		<div class="columns">
+			<div class="primary callout">
+				<form method="POST" action="{{ url_for('reports.generate_inventory_reports') }}">
+					<button type="submit" class="large success button">Generate Inventory Spreadsheet</button>
+				</form>
+			</div>
 	{% for book in books %}
 	{% if loop.index0 is divisibleby(2) %}
 	<div class="row">

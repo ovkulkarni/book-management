@@ -28,10 +28,12 @@ def create_app(environment):
     from modules.inventory.blueprint import inventory
     from modules.cart.blueprint import cart
     from modules.account.blueprint import account
+    from modules.reports.blueprint import reports
 
     app.register_blueprint(cart)
     app.register_blueprint(inventory)
     app.register_blueprint(account)
+    app.register_blueprint(reports)
 
     csrf.init_app(app)
     
@@ -66,13 +68,11 @@ def create_app(environment):
     def home_page():
         return render_template("base.html")
 
-    @app.before_request
-    def set_user():
-        if not g.user:
-            g.user = None
-        if not session.get("logged_in", None):
-            session["logged_in"] = False
-
+    @app.after_request
+    def remove_spreadsheets(r):
+        os.system("rm *.xlsx")
+        return r
+    
     return app
 
 if __name__ == '__main__':

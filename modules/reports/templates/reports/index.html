@@ -1,0 +1,110 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="row"><p><br /></p></div>
+<div class="row">
+	<div class="columns">
+		<div class="primary callout">
+			<form method="POST" id="userForm" action="{{ url_for('reports.generate_purchase_reports') }}">
+				<input type="hidden" name="type" value="user" />
+				<label>User Filter:
+					<select name="user_id" id="userSelect">
+						<option selected disabled>Select a User</option>
+						{% for user in Account.select().order_by(+Account.id) %}
+						<option value="{{ user.id }}">{{ user.name }}</option>
+						{% endfor %}
+					</select>
+				</label>
+			</form>
+		</div>
+	</div>
+</div>
+<div class="row">
+	<div class="columns">
+		<div class="primary callout">
+			<form method="POST" id="timeForm" action="{{ url_for('reports.generate_purchase_reports') }}">
+				<input type="hidden" name="type" value="time">
+				<label>Time Filter:
+					<select name="length" id="timeSelect">
+						<option selected disabled>Select a Time</option>
+						<option value="today">Today</option>
+						<option value="week">Week</option>
+						<option value="month">Month</option>
+						<option value="year">Year</option>
+					</select>
+				</label>
+			</form>
+		</div>
+	</div>
+</div>
+<div class="row">
+	<div class="columns">
+		<div class="primary callout">
+			<form method="POST" id="bookForm" action="{{ url_for('reports.generate_purchase_reports') }}">
+				<input type="hidden" name="type" value="book">
+				<label>Book Filter:
+					<select name="book_id" id="bookSelect">
+						<option selected disabled>Select a Book</option>
+						{% for book in Book.select().order_by(+Book.id) %}
+						<option value="{{ book.id }}">{{ book.title }}</option>
+						{% endfor %}
+					</select>
+				</label>
+			</form>
+		</div>
+	</div>
+</div>
+<div class="row">
+	<div class="columns">
+		<div class="primary callout">
+			<form method="POST" action="{{ url_for('reports.generate_purchase_reports') }}">
+				<input type="hidden" name="type" value="minimum_amount">
+				<label>Minimum Amount Filter:
+				<input type="number" placeholder="Minimum Amount" name="min_amount" min="1" />
+				</label>
+				<button type="submit" class="button">Generate</button>
+			</form>
+		</div>
+	</div>
+</div>
+<div class="row">
+	<div class="columns">
+		<div class="primary callout">
+			<form method="POST" action="{{ url_for('reports.generate_purchase_reports') }}">
+				<input type="hidden" name="type" value="maximum_amount">
+				<label>Maximum Amount Filter:
+				<input type="number" placeholder="Maximum Amount" name="max_amount" min="1" />
+				</label>
+				<button type="submit" class="button">Generate</button>
+			</form>
+		</div>
+	</div>
+</div>
+<div class="row">
+	<div class="columns">
+		<div class="primary callout">
+			<form method="POST" action="{{ url_for('reports.generate_purchase_reports') }}">
+				<input type="hidden" name="type" value="all">
+				<button type="submit" class="button">Generate Without Filter</button>
+			</form>
+		</div>
+	</div>
+</div>
+{% endblock %}
+{% block scripts %}
+<script type="text/javascript">
+	$(document).ready(function() {
+		$timeform = $("#timeForm");
+		$("#timeSelect").change(function(){
+			$timeform.submit()
+		});
+		$userform = $("#userForm");
+		$("#userSelect").change(function(){
+			$userform.submit()
+		});
+		$bookform = $("#bookForm");
+		$("#bookSelect").change(function(){
+			$bookform.submit()
+		});
+	});
+</script>
+{% endblock %}

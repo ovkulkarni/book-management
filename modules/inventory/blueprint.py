@@ -17,6 +17,7 @@ inventory = Blueprint("inventory", __name__, template_folder="templates", url_pr
 @inventory.context_processor
 def expose_models():
 	return dict(Account=Account, int=int)
+	
 @inventory.route("/")
 @admin_required
 def view_inventory():

@@ -7,3 +7,4 @@ WTForms==2.1
 python_dateutil==2.5.3
 pyBarcode==0.7
 Pillow==3.3.0
+XlsxWriter==0.9.3
