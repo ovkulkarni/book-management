@@ -1,5 +1,5 @@
 from database import database
-from flask import Flask, render_template, flash, redirect, make_response, request, session, g
+from flask import Flask, render_template, flash, redirect, make_response, request, session, g, url_for
 from flask_wtf.csrf import CsrfProtect
 import logging
 import subprocess
@@ -67,7 +67,7 @@ def create_app(environment):
 
     @app.route("/")
     def home_page():
-        return render_template("base.html")
+        return redirect(url_for('cart.show_cart'))
 
     @app.after_request
     def remove_spreadsheets(r):

@@ -30,7 +30,7 @@ def change_password():
 		if not request.form.get("new_password", "a") == request.form.get("confirm_new_password", "b"):
 			flash("Passwords must match!", "alert")
 			return redirect(url_for('.change_password'))
-		if not len(request.form.get("new_password", "a")) => 8 and len(request.form.get("new_password")) <= 92:
+		if not len(request.form.get("new_password", "a")) > 7 and len(request.form.get("new_password")) < 92:
 			flash("Password must be between 8 and 92 characters long!", "alert")
 			return redirect(url_for('.change_password'))
 		g.user.password = hash_password(request.form.get("new_password"))
