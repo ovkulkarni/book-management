@@ -12,7 +12,7 @@
 	</div>
 </div>
 {% if session.get('cart', None) %}
-	{% for book in session.get('cart') %}
+	{% for book in session.get('cart', []) %}
 	<div class="row">
 		<div class="large-12 columns center">
 			<div class="callout" data-closable>

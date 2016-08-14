@@ -2,7 +2,7 @@ from flask import Blueprint, render_template, current_app, flash, url_for, reque
 from modules.cart.models import Book, Purchase
 from modules.account.models import Account
 from .forms import ISBNBookForm, ManualBookForm, SearchForm
-from utils import flash_errors, isbn_lookup
+from utils import flash_errors
 from datetime import date
 from dateutil.relativedelta import relativedelta
 from os.path import dirname, realpath, isfile, join
@@ -33,18 +33,8 @@ def add_to_inventory():
 	try:
 		b = Book.get(Book.isbn == form.isbn.data)
 	except Book.DoesNotExist:
-		data = isbn_lookup(form.isbn.data)
-		if not data:
-			flash("Invalid ISBN", "alert")
-			return redirect(url_for(".add_manually"))
-		if len(data.get("authors", [])) > 0:
-			author = ', '.join(data.get("authors"))
-		else:
-			author = "Unknown"
-		if not form.price.data:
-			flash("Please Enter a Price", "alert")
-			return redirect(url_for(".add_to_inventory"))
-		b = Book.create(title=data.get("title"), author=author, publisher=data.get("publisher"), year=data.get("publishedDate", "").split("-")[0], isbn=form.isbn.data, price=form.price.data)
+		flash("Book Not In Inventory", "alert")
+		return redirect(url_for(".add_manually"))
 	b.count += int(form.quantity.data)
 	b.save()
 	flash("{} added to inventory. Count: {}".format(b.title, b.count), "success")
@@ -61,7 +51,7 @@ def add_manually():
 	b.count += 1
 	b.save()
 	flash("{} added to inventory. Count: {}".format(b.title, b.count), "success")
-	return redirect(url_for(".view_inventory"))
+	return redirect(url_for(".add_to_inventory"))
 
 @inventory.route("/edit/<isbn>/", methods=["GET", "POST"])
 @admin_required

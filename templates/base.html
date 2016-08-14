@@ -38,7 +38,7 @@
 	  		{% if g.user %}{% if g.user.admin %}
 	  		<li><a href="{{ url_for('account.add_account') }}"><i class="fa fa-plus-circle"></i><strong>Add Account</strong></a></li>
 	  		<li>
-	  			<a href="#"><i class="fa fa-usd"></i><strong>Reporting</strong></a>
+	  			<a href="#"><i class="fa fa-usd"></i><strong>Sales Report</strong></a>
 	  			<ul class="menu">
 	  				<li><a href="{{ url_for('inventory.view_purchases') }}"><i class="fa fa-globe"></i><strong>Online</strong></a></li>
 	  				<li><a href="{{ url_for('reports.index') }}"><i class="fa fa-file-excel-o"></i><strong>Download</strong></a></li>
@@ -71,7 +71,7 @@
 	        {% if messages %}
 	            {% for category, message in messages %}
 	                <div class="callout {{ category }}" data-closable>
-	                    <h5>{{ message.encode("utf-8") }}</h5>
+	                    <h5>{{ message | safe }}</h5>
 	                 <button class="close-button" aria-label="Dismiss" type="button" data-close>
 	    				<span aria-hidden="true">&times;</span>
 	  				</button>
@@ -79,6 +79,7 @@
 	            {% endfor %}
 	        {% endif %}
 	    {% endwith %}
+	    <h1 class="text-center">{% block header %}{% endblock %}</h1>
 	    {% block content %}
 	    {% endblock %}
 	    {% if version != "" %}

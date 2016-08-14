@@ -2,3 +2,7 @@ body {
     background-color: #ffbf00;
     background-image: url("/static/background.png");
 }
+
+.text-center {
+	text-align: center;
+}

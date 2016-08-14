@@ -7,17 +7,20 @@
 			<form id="timeForm">
 				<label>Time Filter:
 					<select name="time" id="timeSelect">
-						<option value="week" {% if request.args.get("time") == "week" %}selected disabled {% endif %}>Week</option>
-						<option value="month" {% if request.args.get("time") == "month" %}selected disabled {% endif %}>Month</option>
-						<option value="year" {% if request.args.get("time") == "year" %}selected disabled {% endif %}>Year</option>
+						<option selected disabled>Select A Time Period</option>
+						<option value="today">Today</option>
+						<option value="week">Week</option>
+						<option value="month">Month</option>
+						<option value="year">Year</option>
 					</select>
 				</label>
 			</form>
 			<form id="userForm">
 				<label>User Filter:
 					<select name="user_id" id="userSelect">
+						<option selected disabled>Select A User</option>
 						{% for user in Account.select().order_by(+Account.id) %}
-						<option value="{{ user.id }}" {% if int(request.args.get("user_id", -1)) == user.id %}selected disabled {% endif %}>{{ user.name }}</option>
+						<option value="{{ user.id }}">{{ user.name }}</option>
 						{% endfor %}
 					</select>
 				</label>
