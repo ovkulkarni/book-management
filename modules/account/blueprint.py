@@ -75,7 +75,7 @@ def login():
 	session["uid"] = accounts[0].id
 	session["logged_in"] = True
 	flash("Successfully Logged In", "success")
-	return redirect(request.args.get("next", url_for('.info')))
+	return redirect(request.args.get("next", url_for('cart.show_cart')))
 
 @account.route("/logout/")
 @login_required

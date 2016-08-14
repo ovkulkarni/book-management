@@ -67,7 +67,10 @@ def create_app(environment):
 
     @app.route("/")
     def home_page():
-        return redirect(url_for('cart.show_cart'))
+        if g.user:
+            return redirect(url_for('cart.show_cart'))
+        else:
+            return redirect(url_for('account.login'))
 
     @app.after_request
     def remove_spreadsheets(r):
