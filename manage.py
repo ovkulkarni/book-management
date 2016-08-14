@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 from app import create_app
 from flask_script import Manager
 import database as db
