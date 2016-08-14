@@ -10,6 +10,7 @@ def generate_purchase_spreadsheet(purchases):
 	worksheet.write(0, 2, "Book ISBN", bold)
 	worksheet.write(0, 3, "Purchase Total", bold)
 	worksheet.write(0, 4, "Sold By", bold)
+	worksheet.write(0, 5, "Type Of Sale", bold)
 	row = 1
 	for purchase in purchases:
 		worksheet.write(row, 0, purchase.time.ctime())
@@ -17,10 +18,11 @@ def generate_purchase_spreadsheet(purchases):
 		worksheet.write(row, 2, purchase.book.isbn)
 		worksheet.write(row, 3, purchase.total, money)
 		worksheet.write(row, 4, purchase.seller.name)
+		worksheet.write(row, 5, purchase.method.title())
 		row += 1
 	worksheet.write(row + 1, 0, "Total Revenue", bold)
 	worksheet.write(row + 1, 1, "=SUM(D1:D{})".format(row), money)
-	worksheet.set_column(0, 4, 20)
+	worksheet.set_column(0, 5, 20)
 	workbook.close()
 	return "report.xlsx"
 

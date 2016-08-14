@@ -47,23 +47,30 @@
 	<div class="row">
 		<form method="POST" id="isbn_add_form">
 		{{ form.csrf_token() }}
-		<div class="large-8 columns">
+		<div class="large-7 columns">
 			<div class="primary callout">
 				{{ render_field(form.isbn, placeholder="13 Digit ISBN Number", id="isbn_add_field", maxlength="13", autofocus=True) }}
 			</div>
 		</div>
 		</form>
-		<div class="large-4 columns">
+		<div class="large-5 columns">
 			<div class="callout">
 				<div class="row">
-				<div class="large-6 columns">
+				<div class="large-4 columns">
 					<h5>Total:</h5>
 					<h3>${{ session.get('total', 0) }}</h3>
 				</div>
-				<div class="large-6 columns">
+				<div class="columns">
 					<p></p>
 					<form method="POST" action="{{ url_for('cart.complete_purchase') }}">
 						<input type="hidden" value="{{ csrf_token() }}" name="csrf_token">
+						  <fieldset>
+						    <legend>Type Of Sale</legend>
+						    <input type="radio" name="saleType" value="sale" id="saleButton" required checked><label for="saleButton">Sale</label>
+						    <input type="radio" name="saleType" value="return" id="returnButton"><label for="returnButton">Return</label>
+						    <input type="radio" name="saleType" value="gift" id="giftButton"><label for="giftButton">Gift</label>
+						    <input type="radio" name="saleType" value="damaged" id="damagedButton"><label for="damagedButton">Damaged Item</label>
+						  </fieldset>
 						<button type="submit" class="button">Complete Purchase</button>
 					</form>
 				</div>

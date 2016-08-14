@@ -28,6 +28,7 @@ class Purchase(BaseModel):
     time = DateTimeField(verbose_name="Purchase Date/Time")
     books = ManyToManyField(Book, related_name="purchases")
     seller = ForeignKeyField(Account)
+    method = CharField(7, verbose_name="Sale Type")
     total = IntegerField("Purchase Total")
 
     @property

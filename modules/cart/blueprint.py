@@ -47,7 +47,7 @@ def clear_cart():
 @cart.route("/purchase/", methods=["POST"])
 @login_required
 def complete_purchase():
-    method = request.form.get("method", "sale")
+    method = request.form.get("saleType", "sale")
     cart = session.get("cart", [])
     if len(cart) < 1:
         flash("No Books in Cart", "alert")
