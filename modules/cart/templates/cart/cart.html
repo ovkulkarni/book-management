@@ -15,7 +15,7 @@
 	{% for book in session.get('cart') %}
 	<div class="row">
 		<div class="large-12 columns center">
-			<div class="callout">
+			<div class="callout" data-closable>
 				<div class="row">
 					<div class="large-6 columns">
 						<h4>{{ book.title }}</h4>
@@ -29,6 +29,12 @@
 						<p>Author: {{ book.author }}</p>
 					</div>
 				</div>
+				<form method="POST" action="{{ url_for('cart.remove_item') }}">
+					<input type="hidden" name="remove_isbn" value="{{ book.isbn }}" />
+					<button class="close-button" aria-label="Dismiss" type="submit" data-close>
+		    				<span aria-hidden="true">&times;</span>
+		  			</button>
+	  			</form>
 			</div>
 		</div>
 	</div>

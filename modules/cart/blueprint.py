@@ -37,6 +37,18 @@ def show_cart():
     flash("Added {} to cart".format(b.title), "success")
     return redirect(url_for('.show_cart'))
 
+@cart.route("/remove/", methods=["POST"])
+@login_required
+def remove_item():
+    current_cart = session.get("cart", [])
+    b = Book.get(Book.isbn == request.form.get("remove_isbn"))
+    current_cart.remove(b.serialize())
+    session["cart"] = current_cart
+    current_total = session.get("total", 0)
+    current_total -= b.price
+    session["total"] = current_total
+    return redirect(url_for('.show_cart'))
+
 @cart.route("/clear/")
 @login_required
 def clear_cart():

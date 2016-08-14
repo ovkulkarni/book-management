@@ -1,4 +1,4 @@
 - inventory filtering by quantity -- done
-- removing single items from cart
-- radio buttons for damaged, gift, sale, or return
+- removing single items from cart -- done
+- radio buttons for damaged, gift, sale, or return -- done
 - search for items -- done
