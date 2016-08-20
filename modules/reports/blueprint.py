@@ -22,12 +22,19 @@ def index():
 
 @reports.route("/generate/receipts/", methods=["POST"])
 def generate_receipt_reports():
-	book_id = request.form.get("receipt-book", "all")
-	if book_id == "all":
-		receipts = Receipt.select()
+	select_by = request.form.get("receipt-method", "none")
+	if select_by == "book":
+		book_id = int(request.form.get("receipt-book"))
+		b = Book.get(Book.id == book_id)
+		receipts = b.receipts.order_by(Receipt.date.desc())
+	elif select_by == "user":
+		user_id = int(request.form.get("receipt-user"))
+		a = Account.get(Account.id == user_id)
+		receipts = a.additions.order_by(Receipt.date.desc())
+	elif select_by == "invoice_number":
+		receipts = Receipt.select().where(Receipt.invoice_number == request.form.get("receipt-invoice")).order_by(Receipt.date.desc())
 	else:
-		b = Book.get(Book.id == int(book_id))
-		receipts = b.receipts
+		receipts = Receipt.select().order_by(Receipt.date.desc())
 	spreadsheet_path = generate_receipt_spreadsheet(receipts)
 	return send_file(spreadsheet_path, mimetype="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", attachment_filename="report.xlsx")
 

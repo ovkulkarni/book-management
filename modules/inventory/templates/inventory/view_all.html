@@ -4,6 +4,7 @@
 	<div class="row">
 		<div class="columns">
 			<div class="primary callout">
+				<h3>Inventory: Full Store</h3>
 				<form method="POST" action="{{ url_for('reports.generate_inventory_reports') }}">
 					<input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
 					<button type="submit" class="success button">Generate Inventory Spreadsheet</button>
@@ -14,10 +15,11 @@
 	<div class="row">
 		<div class="columns">
 			<div class="primary callout">
+				<h3>Inventory: Filter By Maximum Quantity</h3>
 				<form method="POST" action="{{ url_for('reports.generate_inventory_reports') }}">
 					<input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
 					<input type="number" name="max_quantity" placeholder="Maximum Quantity" min="0" />
-					<button type="submit" class="button">Generate</button>
+					<button type="submit" class="success button">Generate</button>
 				</form>
 			</div>
 		</div>
@@ -25,15 +27,60 @@
 	<div class="row">
 		<div class="columns">
 			<div class="primary callout">
+				<h3>Receipts: All Receipts</h3>
 				<form method="POST" action="{{ url_for('reports.generate_receipt_reports') }}">
 					<input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
+					<button type="submit" class="success button">Generate Receipt Spreadsheet</button>
+				</form>
+			</div>
+		</div>
+	</div>
+	<div class="row">
+		<div class="columns">
+			<div class="primary callout">
+				<h3>Receipts: Filter By Book</h3>
+				<form method="POST" action="{{ url_for('reports.generate_receipt_reports') }}">
+					<input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
+					<input type="hidden" name="receipt-method" value="book" />
 					<select name="receipt-book">
-					<option value="all" selected>All Books</option>
+					<option selected disabled>Select A Book</option>
 					{% for book in Book.select() %}
 					<option value="{{ book.id }}">{{ book.title }}</option>
 					{% endfor %}
 					</select>
-					<button type="submit" class="success button">Generate Receipt Spreadsheet</button>
+					<button type="submit" class="success button">Generate</button>
+				</form>
+			</div>
+		</div>
+	</div>
+	<div class="row">
+		<div class="columns">
+			<div class="primary callout">
+				<h3>Receipts: Filter By User</h3>
+				<form method="POST" action="{{ url_for('reports.generate_receipt_reports') }}">
+					<input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
+					<input type="hidden" name="receipt-method" value="user" />
+					<select name="receipt-user">
+					<option selected disabled>Select A User</option>
+					{% for user in Account.select() %}
+					<option value="{{ user.id }}">{{ user.name }}</option>
+					{% endfor %}
+					</select>
+					<button type="submit" class="success button">Generate</button>
+				</form>
+			</div>
+		</div>
+	</div>
+	<div class="row">
+		<div class="columns">
+			<div class="primary callout">
+				<h3>Receipts: Filter By Invoice Number</h3>
+				<form method="POST" action="{{ url_for('reports.generate_receipt_reports') }}">
+					<input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
+					<input type="hidden" name="receipt-method" value="invoice_number" />
+					<label for="receipt-invoice">Invoice Number</label>
+					<input type="text" name="receipt-invoice" id="receipt-invoice" placeholder="Invoice Number" />
+					<button type="submit" class="success button">Generate</button>
 				</form>
 			</div>
 		</div>
