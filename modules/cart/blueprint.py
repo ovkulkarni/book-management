@@ -23,11 +23,11 @@ def show_cart():
     try:
         b = Book.get(Book.isbn == form.isbn.data)
     except Book.DoesNotExist:
-        flash("We don't have any books with that ISBN :/", "alert")
+        flash("We don't have any books with that ISBN :/", "error")
         return redirect(url_for('.show_cart'))
     current_cart = session.get("cart", [])
     if current_cart.count(b.serialize()) >= b.count:
-        flash("Unable to add - not in stock", "alert")
+        flash("Unable to add - not in stock", "error")
         return redirect(url_for(".show_cart"))
     current_cart.append(b.serialize())
     session["cart"] = current_cart
@@ -62,7 +62,7 @@ def complete_purchase():
     method = request.form.get("saleType", "sale")
     cart = session.get("cart", [])
     if len(cart) < 1:
-        flash("No Books in Cart", "alert")
+        flash("No Books in Cart", "error")
         return redirect(url_for(".show_cart"))
     for book in cart:
         p = Purchase.create(time=datetime.now(), seller=g.user, method=method)

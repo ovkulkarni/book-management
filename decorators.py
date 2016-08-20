@@ -7,7 +7,7 @@ def login_required(f):
 		if g.user is not None:
 			return f(*args, **kwargs)
 		else:
-			flash("You must be logged in to perform this action.", "alert")
+			flash("You must be logged in to perform this action.", "error")
 			return redirect(url_for("account.login", next=request.path))
 	return _decorated
 
@@ -18,9 +18,9 @@ def admin_required(f):
 			if g.user.admin:
 				return f(*args, **kwargs)
 			else:
-				flash("You must be an admin to perform this action.", "alert")
+				flash("You must be an admin to perform this action.", "error")
 				return redirect(url_for('home_page'))
 		else:
-			flash("You must be logged in to perform this action.", "alert")
+			flash("You must be logged in to perform this action.", "error")
 			return redirect(url_for("account.login", next=request.path))
 	return _decorated

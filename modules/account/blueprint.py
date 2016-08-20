@@ -25,13 +25,13 @@ def info():
 def change_password():
 	if request.method == "POST":
 		if not verify_password(str(request.form.get("original_password", "")), g.user):
-			flash("Invalid Credentials", "alert")
+			flash("Invalid Credentials", "error")
 			return redirect(url_for('.change_password'))
 		if not request.form.get("new_password", "a") == request.form.get("confirm_new_password", "b"):
-			flash("Passwords must match!", "alert")
+			flash("Passwords must match!", "error")
 			return redirect(url_for('.change_password'))
 		if not len(request.form.get("new_password", "a")) > 7 and len(request.form.get("new_password")) < 92:
-			flash("Password must be between 8 and 92 characters long!", "alert")
+			flash("Password must be between 8 and 92 characters long!", "error")
 			return redirect(url_for('.change_password'))
 		g.user.password = hash_password(request.form.get("new_password"))
 		g.user.save()
@@ -52,7 +52,7 @@ def add_account():
 		admin_account = True
 	matching_emails = Account.select().where(Account.email == form.email.data)
 	if matching_emails.count() > 0:
-		flash("An account already exists with that email.", "alert")
+		flash("An account already exists with that email.", "error")
 		return redirect(url_for('.add_account'))
 	a = Account.create(name=form.name.data, email=form.email.data, password=hash_password(form.password.data), admin=admin_account)
 	a.save()
@@ -67,10 +67,10 @@ def login():
 		return render_template("account/login.html", form=form)
 	accounts = Account.select().where(Account.email == form.email.data)
 	if not accounts.count() > 0:
-		flash("Invalid Credentials", "alert")
+		flash("Invalid Credentials", "error")
 		return redirect(url_for('.login'))
 	if not verify_password(form.password.data, accounts[0]):
-		flash("Invalid Credentials", "alert")
+		flash("Invalid Credentials", "error")
 		return redirect(url_for('.login'))
 	session["uid"] = accounts[0].id
 	session["logged_in"] = True

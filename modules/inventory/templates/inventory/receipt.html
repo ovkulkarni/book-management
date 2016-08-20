@@ -1,0 +1,92 @@
+{% extends "base.html" %}
+{% from "forms.html" import render_field %}
+
+{% block content %}
+<div class="row">
+	<div class="large-8 columns">
+        <br />
+	</div>
+	<div class="large-2 columns">
+		<br />
+		<a href="{{ url_for('inventory.add_manually') }}" class="secondary button">Add New Book</a>
+	</div>
+	<div class="large-2 columns">
+		<br />
+		<a href="{{ url_for('inventory.clear_receipt') }}" class="alert button"><i class="fa fa-trash"></i>&nbsp;Clear</a>
+	</div>
+</div>
+<form method="POST" action="{{ url_for('inventory.complete_receipt') }}">
+{% if session.get('receipt', None) %}
+	{% for book in session.get('receipt', []) %}
+	<div class="row">
+		<div class="large-12 columns center">
+			<div class="callout">
+				<div class="row">
+					<div class="large-6 columns">
+						<h4>{{ book.title }}</h4>
+					</div>
+					<div class="large-2 columns">
+						<label for="quantity-{{ book.isbn }}">Book Quantity</label>
+						<input type="number" name="quantity-{{ book.isbn }}" id="quantity-{{ book.isbn }}" placeholder="Book Quantity" min="0" />
+					</div>
+
+					<div class="large-2 columns">
+						<label for="unit-{{ book.isbn }}">Unit Price</label>
+						<input type="number" name="unit-{{ book.isbn }}" min="0" placeholder="Unit Price" id="unit-{{ book.isbn }}" />
+					</div>
+				</div>
+				<div class="row">
+					<div class="columns">
+						<p>Author: {{ book.author }}</p>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	{% endfor %}
+{% else %}
+	<div class="row">
+		<div class="large-12 columns">
+			<div class="callout">
+				<h1>No Books Received</h1>
+			</div>
+		</div>
+	</div>
+{% endif %}
+
+	
+	<div class="row">
+		<div class="large-5 columns">
+			<div class="callout">
+				
+					<input type="hidden" value="{{ csrf_token() }}" name="csrf_token">
+					<label for="invoice_number">Invoice Number</label>
+					<input type="text" name="invoice_number" placeholder="Invoice Number" id="invoice_number" />
+					<label for="invoice_date">Invoice Date</label>
+					<input type="date" name="invoice_date" placeholder="Invoice Date" id="invoice_date" />
+					<button type="submit" class="button">Complete Receipt</button>
+				</form>
+			</div>
+		</div>
+		<div class="large-7 columns">
+			<div class="primary callout">
+				<form method="POST" id="isbn_add_form">
+					{{ form.csrf_token() }}
+					{{ render_field(form.isbn, placeholder="13 Digit ISBN Number", id="isbn_add_field", maxlength="13") }}
+				</form>
+			</div>
+		</div>
+	</div>
+{% endblock %}
+{% block scripts %}
+<script type="text/javascript">
+	$(document).ready(function() {
+		$form = $("#isbn_add_form");
+		$("#isbn_add_field").on('input', function(){
+			if(/(978|979)\d{10}/.test($(this).val()) === true){
+				$form.submit()
+			}
+		});
+	});
+</script>
+{% endblock %}

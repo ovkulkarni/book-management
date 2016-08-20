@@ -1,14 +1,16 @@
-from flask import Blueprint, render_template, current_app, flash, url_for, request, session, flash, redirect, send_from_directory
+from flask import Blueprint, render_template, current_app, flash, url_for, request, session, flash, redirect, send_from_directory, g
 from modules.cart.models import Book, Purchase
 from modules.account.models import Account
+from .models import Receipt
 from .forms import ISBNBookForm, ManualBookForm, SearchForm
 from utils import flash_errors
-from datetime import date
+from datetime import date, datetime
 from dateutil.relativedelta import relativedelta
 from os.path import dirname, realpath, isfile, join
 from os import getcwd, chdir
 from barcode.writer import ImageWriter
 from decorators import admin_required, login_required
+from database import database
 import barcode
 
 
@@ -16,7 +18,7 @@ inventory = Blueprint("inventory", __name__, template_folder="templates", url_pr
 
 @inventory.context_processor
 def expose_models():
-	return dict(Account=Account, int=int)
+	return dict(Account=Account, Book=Book, int=int)
 	
 @inventory.route("/")
 @admin_required
@@ -26,18 +28,23 @@ def view_inventory():
 @inventory.route("/add/", methods=["GET", "POST"])
 @admin_required
 def add_to_inventory():
+	if not session.get("receipt", None):
+		session["receipt"] = []
 	form = ISBNBookForm(request.form)
 	if not form.validate_on_submit():
 		flash_errors(form)
-		return render_template("inventory/add.html", form=form)
+		return render_template("inventory/receipt.html", form=form)
 	try:
 		b = Book.get(Book.isbn == form.isbn.data)
 	except Book.DoesNotExist:
-		flash("Book Not In Inventory", "alert")
+		flash("Book Not In Inventory", "error")
 		return redirect(url_for(".add_manually"))
-	b.count += int(form.quantity.data)
-	b.save()
-	flash("{} added to inventory. Count: {}".format(b.title, b.count), "success")
+	current_receipts = session.get("receipt", [])
+	if not b.serialize() in current_receipts:
+		current_receipts.append(b.serialize())
+		session["receipt"] = current_receipts
+	else:
+		flash("Already Recieved This Book", "error")
 	return redirect(url_for(".add_to_inventory"))
 
 @inventory.route("/add/manual/", methods=["GET", "POST"])
@@ -48,7 +55,7 @@ def add_manually():
 		flash_errors(form)
 		return render_template("inventory/manual.html", form=form)
 	b = Book.create(title=form.title.data, author=form.author.data, publisher=form.publisher.data, year=form.year.data, isbn=form.isbn.data, alt_code=form.alt_code.data, price=form.price.data)
-	b.count += 1
+	b.count = 0
 	b.save()
 	flash("{} added to inventory. Count: {}".format(b.title, b.count), "success")
 	return redirect(url_for(".add_to_inventory"))
@@ -95,7 +102,7 @@ def view_purchases():
 			flash("Showing purchases created by {}".format(a.name), "success")
 			purchases = Purchase.select().where(Purchase.seller == a).order_by(Purchase.time.desc())
 		except Account.DoesNotExist:
-			flash("Invalid User ID", "alert")
+			flash("Invalid User ID", "error")
 			return redirect(url_for('.view_purchases'))
 	else:
 		purchases = Purchase.select().order_by(Purchase.time.desc())
@@ -131,6 +138,45 @@ def search_for_book():
 								(Book.alt_code.contains(term)) | 
 								(Book.author.contains(term)) )
 	return render_template("inventory/results.html", books=books, form=form, all_books=all_books)
+
+@inventory.route("/remove/", methods=["POST"])
+@admin_required
+def remove_receipt_item():
+    current_cart = session.get("receipt", [])
+    b = Book.get(Book.isbn == request.form.get("remove_isbn"))
+    current_cart.remove(b.serialize())
+    session["receipt"] = current_cart
+    return redirect(url_for('.add_to_inventory'))
+
+@inventory.route("/clear/")
+def clear_receipt():
+	session["receipt"] = []
+	return redirect(url_for('.add_to_inventory'))
+
+@inventory.route("/complete/", methods=["POST"])
+def complete_receipt():
+	books = session.get("receipt", [])
+	for field in request.form:
+		if request.form.get(field, "") == "":
+			flash("{} is required".format(field), "error")
+			return redirect(url_for(".add_to_inventory"))
+	add_books_to_inventory(books, request.form)
+	return redirect(url_for('.clear_receipt'))
+
+@database.transaction()
+def add_books_to_inventory(books, form):
+	for book in books:
+		b = Book.get(Book.isbn == book.get("isbn"))
+		b.count += int(form.get("quantity-{}".format(b.isbn)))
+		r = Receipt.create(book=b, user=g.user, date=datetime.now(), invoice_number=form.get("invoice_number"), 
+			invoice_date=datetime.strptime(form.get("invoice_date"), "%Y-%m-%d").date(), unit_price=int(form.get("unit-{}".format(b.isbn))),
+			quantity=int(form.get("quantity-{}".format(b.isbn))))
+		r.save()
+		b.save()
+		flash("Received {} - Current Count: {} - Just Added: {}".format(b.title, b.count, r.quantity), "success")
+		if r.unit_price > b.price:
+			flash("Warning: The Unit Price is greater than the selling price", "warn")
+
 
 
 

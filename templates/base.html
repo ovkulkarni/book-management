@@ -5,12 +5,23 @@
 	<meta charset="utf-8">
 	<meta http-equiv="x-ua-compatible" content="ie=edge">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
+
+	<!-- ICONS -->
+	<link rel="apple-touch-icon" sizes="180x180" href="/static/icons/apple-touch-icon.png">
+	<link rel="icon" type="image/png" href="/static/icons/favicon-32x32.png" sizes="32x32">
+	<link rel="icon" type="image/png" href="/static/icons/favicon-16x16.png" sizes="16x16">
+	<link rel="manifest" href="/static/icons/manifest.json">
+	<link rel="mask-icon" href="/static/icons/safari-pinned-tab.svg" color="#5bbad5">
+	<link rel="shortcut icon" href="/static/icons/favicon.ico">
+	<meta name="msapplication-config" content="/static/icons/browserconfig.xml">
+	<meta name="theme-color" content="#ffd600">
 	
 	
 	<link href="//maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-T8Gy5hrqNKT+hzMclPo118YTQO6cYprQmhrYwIiQ/3axmI1hQomh7Ud2hPOy8SP1" crossorigin="anonymous">
 
-	<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/foundation.css') }}" />
+	<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/foundation.min.css') }}" />
 	<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/app.css') }}" />
+	<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/overhang.min.css') }}" />
 	<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.0/jquery-ui.min.css">
 	{% if extra_css %}
 		{% if extra_css is string %}
@@ -67,18 +78,6 @@
 	  </div>
 	</div>
 	<div id="content" class="container">
-		{% with messages = get_flashed_messages(with_categories=true) %}
-	        {% if messages %}
-	            {% for category, message in messages %}
-	                <div class="callout {{ category }}" data-closable>
-	                    <h5>{{ message | safe }}</h5>
-	                 <button class="close-button" aria-label="Dismiss" type="button" data-close>
-	    				<span aria-hidden="true">&times;</span>
-	  				</button>
-	                </div>
-	            {% endfor %}
-	        {% endif %}
-	    {% endwith %}
 	    <h1 class="text-center">{% block header %}{% endblock %}</h1>
 	    {% block content %}
 	    {% endblock %}
@@ -95,7 +94,21 @@
 	<script type="text/javascript" src="{{ url_for('static', filename='js/vendor/foundation.js') }}"></script>
 	<script type="text/javascript" src="{{ url_for('static', filename='js/vendor/what-input.js') }}"></script>
 	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.0/jquery-ui.js"></script>
+	<script type="text/javascript" src="{{ url_for('static', filename='js/overhang/overhang.min.js') }}"></script>
 	<script type="text/javascript" src="{{ url_for('static', filename='js/app.js') }}"></script>
+	{% with messages = get_flashed_messages(with_categories=true) %}
+	        {% if messages %}
+	        	<script type="text/javascript">
+	            {% for category, message in messages %}
+	               $("body").overhang({
+	               		type: "{{ category }}",
+	               		message: "{{ message | safe }}",
+	               		closeConfirm: true
+	               	});
+	            {% endfor %}
+	            </script>
+	        {% endif %}
+	    {% endwith %}
 	{% block scripts %}
 	{% endblock %}
 	<!-- 

@@ -1,8 +1,9 @@
 from flask import Blueprint, render_template, current_app, flash, url_for, request, session, flash, redirect, send_from_directory, g, send_file
 from utils import flash_errors
-from .localutils import generate_inventory_spreadsheet, generate_purchase_spreadsheet
+from .localutils import generate_inventory_spreadsheet, generate_purchase_spreadsheet, generate_receipt_spreadsheet
 from modules.cart.models import Purchase, Book
 from modules.account.models import Account
+from modules.inventory.models import Receipt
 from decorators import admin_required
 from datetime import date
 from dateutil.relativedelta import relativedelta
@@ -19,6 +20,17 @@ def expose_models():
 def index():
 	return render_template("reports/index.html")
 
+@reports.route("/generate/receipts/", methods=["POST"])
+def generate_receipt_reports():
+	book_id = request.form.get("receipt-book", "all")
+	if book_id == "all":
+		receipts = Receipt.select()
+	else:
+		b = Book.get(Book.id == int(book_id))
+		receipts = b.receipts
+	spreadsheet_path = generate_receipt_spreadsheet(receipts)
+	return send_file(spreadsheet_path, mimetype="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", attachment_filename="report.xlsx")
+
 @reports.route("/generate/inventory/", methods=["POST"])
 @admin_required
 def generate_inventory_reports():
@@ -33,7 +45,7 @@ def generate_inventory_reports():
 @admin_required
 def generate_purchase_reports():
 	if not request.form.get("type", None):
-		flash("Invalid POST Data", "alert")
+		flash("Invalid POST Data", "error")
 		return redirect(url_for('.index'))
 	report_type = request.form.get("type")
 	if report_type == "user":
