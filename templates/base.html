@@ -70,7 +70,7 @@
 	  		{% if not session.get("logged_in") %}
 	  		<li><a href="{{ url_for('account.login') }}"><i class="fa fa-sign-in"></i><strong>Login</strong></a></li>
 	  		{% else %}
-            <li><a href="{{ url_for('account.info') }}"><i class="fa fa-info-circle"></i><strong>My Account ({{ g.user.name }})</strong></a></li>
+            <li><a href="{{ url_for('account.info') }}"><i class="fa fa-info-circle"></i><strong>My Account</strong></a></li>
 	  		<li><a href="{{ url_for('cart.show_cart') }}"><i class="fa fa-shopping-cart"></i><strong>Cart</strong>&nbsp;<span class="badge">{{ session.get('cart', []) | length }}</span></a></li>
 	  		<li><a href="{{ url_for('account.logout') }}"><i class="fa fa-sign-out"></i><strong>Logout</strong></a></li>
 	  		{% endif %}
