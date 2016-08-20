@@ -60,12 +60,13 @@ def clear_cart():
 @login_required
 def complete_purchase():
     method = request.form.get("saleType", "sale")
+    comment = request.form.get("saleComment", "No Comment")
     cart = session.get("cart", [])
     if len(cart) < 1:
         flash("No Books in Cart", "error")
         return redirect(url_for(".show_cart"))
     for book in cart:
-        p = Purchase.create(time=datetime.now(), seller=g.user, method=method)
+        p = Purchase.create(time=datetime.now(), seller=g.user, method=method, comment=comment)
         b = Book.get(Book.isbn == book.get("isbn"))
         if method == "return":
             return_book_transaction(p, b)

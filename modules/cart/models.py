@@ -29,6 +29,7 @@ class Purchase(BaseModel):
     books = ManyToManyField(Book, related_name="purchases")
     seller = ForeignKeyField(Account)
     method = CharField(7, verbose_name="Sale Type")
+    comment = CharField(128, verbose_name="Sale Comment")
     total = IntegerField("Purchase Total")
 
     @property
