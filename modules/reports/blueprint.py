@@ -9,7 +9,7 @@ from datetime import date
 from dateutil.relativedelta import relativedelta
 
 
-reports = Blueprint("reports", __name__, template_folder="templates", url_prefix="/reports")
+reports = Blueprint("reports", __name__, template_folder="templates", url_prefix="bookstore/reports")
 
 @reports.context_processor
 def expose_models():

@@ -21,7 +21,7 @@ Message:
 csrf = CsrfProtect()
 
 def create_app(environment):
-    app = Flask(__name__)
+    app = Flask(__name__, static_url_path="/bookstore/static/")
     app.config.from_pyfile("config/{}.py".format(environment))
 
     database.init(app.config["DB_PATH"])
@@ -38,10 +38,10 @@ def create_app(environment):
 
     csrf.init_app(app)
     
-    @app.route("/favicon.ico")
+    @app.route("bookstore/favicon.ico")
     def favicon(): return redirect('/static/favicon.ico')
 
-    @app.route("/robots.txt")
+    @app.route("bookstore/robots.txt")
     def robots_txt(): return redirect('/static/robots.txt')
 
     @app.context_processor
@@ -65,7 +65,7 @@ def create_app(environment):
     def csrf_error(reason):
         return make_response(render_template('csrf_error.html', reason=reason), 400)
 
-    @app.route("/")
+    @app.route("bookstore/")
     def home_page():
         if g.user:
             return redirect(url_for('cart.show_cart'))
