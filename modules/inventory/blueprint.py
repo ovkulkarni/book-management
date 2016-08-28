@@ -119,7 +119,7 @@ def generate_barcode(isbn):
 	barcode_path = join(current_path, "static/barcodes")
 	chdir(barcode_path)
 	if not isfile(join(barcode_path, "{}.png".format(isbn))):
-		code = barcode.get('isbn13', isbn, writer=ImageWriter())
+		code = barcode.get('code39', isbn, writer=ImageWriter())
 		filename = code.save(isbn)
 	chdir(original_path)
 	return send_from_directory(barcode_path, "{}.png".format(isbn))
