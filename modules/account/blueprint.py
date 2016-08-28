@@ -61,8 +61,6 @@ def add_account():
 
 @account.route("/login/", methods=["GET", "POST"])
 def login():
-	if g.user:
-		return redirect(url_for('home_page'))
 	form = LoginForm(request.form)
 	if not form.validate_on_submit():
 		flash_errors(form)
