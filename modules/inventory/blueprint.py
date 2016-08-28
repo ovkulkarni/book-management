@@ -14,7 +14,7 @@ from database import database
 import barcode
 
 
-inventory = Blueprint("inventory", __name__, template_folder="templates", url_prefix="bookstore/inventory")
+inventory = Blueprint("inventory", __name__, template_folder="templates", url_prefix="/bookstore/inventory")
 
 @inventory.context_processor
 def expose_models():
