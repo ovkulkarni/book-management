@@ -91,7 +91,7 @@
 	$(document).ready(function() {
 		$form = $("#isbn_add_form");
 		$("#isbn_add_field").on('input', function(){
-			if(/(978|979)\d{10}/.test($(this).val()) === true){
+			if(/((978|979)\d{10}|999\d{3})/.test($(this).val()) === true){
 				$form.submit()
 			}
 		});
