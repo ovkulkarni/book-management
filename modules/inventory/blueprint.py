@@ -41,7 +41,7 @@ def add_to_inventory():
 		online_data = isbn_lookup(form.isbn.data)
 		if online_data:
 			return redirect(url_for('.add_manually', author=online_data["author"], isbn=form.isbn.data, title=online_data["title"]))
-		return redirect(url_for(".add_manually"))
+		return redirect(url_for(".add_manually", isbn=form.isbn.data))
 	current_receipts = session.get("receipt", [])
 	if not b.serialize() in current_receipts:
 		current_receipts.append(b.serialize())
