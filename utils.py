@@ -15,9 +15,12 @@ def isbn_lookup(isbn_number):
 		return None
 	try:
 		data = json.loads(r.text)["items"][0]["volumeInfo"]
+		author = data.get("authors")
+		if isinstance(author, list):
+			author = ', '.join(author)
 		return {
 			"title": data.get("title"),
-			"author": ', '.join(data.get("authors"))
+			"author": author
 		}
 	except KeyError:
 		return None
