@@ -155,6 +155,17 @@ def remove_receipt_item():
     session["receipt"] = current_cart
     return redirect(url_for('.add_to_inventory'))
 
+@inventory.route("/lookup/", methods=["GET", "POST"])
+def lookup_book():
+	form = ISBNBookForm(request.form)
+	if not form.validate_on_submit():
+		flash_errors(form)
+		return render_template("inventory/lookup.html", form=form)
+	online_data = isbn_lookup(form.isbn.data)
+	if online_data:
+		return redirect(url_for('.add_manually', author=online_data["author"], isbn=form.isbn.data, title=online_data["title"]))
+	return redirect(url_for(".add_manually", isbn=form.isbn.data))
+
 @inventory.route("/clear/")
 def clear_receipt():
 	session["receipt"] = []
