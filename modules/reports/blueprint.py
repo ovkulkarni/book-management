@@ -10,7 +10,7 @@ from dateutil.relativedelta import relativedelta
 
 
 reports = Blueprint(
-    "reports", __name__, template_folder="templates", url_prefix="/bookstore/reports")
+    "reports", __name__, template_folder="templates", url_prefix="/bookstore-test/reports")
 
 
 @reports.context_processor

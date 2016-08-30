@@ -8,8 +8,8 @@ from database import database
 from decorators import login_required
 
 
-cart = Blueprint(
-    "cart", __name__, template_folder="templates", url_prefix="/bookstore/cart")
+cart = Blueprint("cart", __name__, template_folder="templates",
+                 url_prefix="/bookstore-test/cart")
 
 
 @cart.route("/", methods=["GET", "POST"])

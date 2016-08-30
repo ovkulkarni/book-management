@@ -6,7 +6,7 @@ from .localutils import hash_password, verify_password, get_current_user
 from decorators import admin_required, login_required
 
 account = Blueprint(
-    "account", __name__, template_folder="templates", url_prefix="/bookstore/account")
+    "account", __name__, template_folder="templates", url_prefix="/bookstore-test/account")
 
 
 @account.route("/", methods=["GET", "POST"])

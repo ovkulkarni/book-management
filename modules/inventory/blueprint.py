@@ -16,7 +16,7 @@ import barcode
 
 
 inventory = Blueprint(
-    "inventory", __name__, template_folder="templates", url_prefix="/bookstore/inventory")
+    "inventory", __name__, template_folder="templates", url_prefix="/bookstore-test/inventory")
 
 
 @inventory.context_processor
