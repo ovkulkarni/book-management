@@ -3,7 +3,7 @@ from modules.cart.models import Book, Purchase
 from modules.account.models import Account
 from .models import Receipt
 from .forms import ISBNBookForm, ManualBookForm, SearchForm
-from utils import flash_errors
+from utils import flash_errors, isbn_lookup
 from datetime import date, datetime
 from dateutil.relativedelta import relativedelta
 from os.path import dirname, realpath, isfile, join
@@ -38,6 +38,9 @@ def add_to_inventory():
 		b = Book.get(Book.isbn == form.isbn.data)
 	except Book.DoesNotExist:
 		flash("Book Not In Inventory", "error")
+		online_data = isbn_lookup(form.isbn.data)
+		if online_data:
+			return redirect(url_for('.add_manually', author=online_data["author"], isbn=form.isbn.data, title=online_data["title"]))
 		return redirect(url_for(".add_manually"))
 	current_receipts = session.get("receipt", [])
 	if not b.serialize() in current_receipts:
@@ -50,7 +53,7 @@ def add_to_inventory():
 @inventory.route("/add/manual/", methods=["GET", "POST"])
 @admin_required
 def add_manually():
-	form = ManualBookForm(request.form)
+	form = ManualBookForm(request.form, isbn=request.args.get("isbn", ""), author=request.args.get("author", ""), title=request.args.get("title", ""))
 	if not form.validate_on_submit():
 		flash_errors(form)
 		return render_template("inventory/manual.html", form=form)
