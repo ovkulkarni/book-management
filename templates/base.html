@@ -31,7 +31,12 @@
 	        <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/{}.css'.format(file)) }}">
 	       	{% endfor %}
        	{% endif %}
-    {% endif %}
+        {% endif %}
+    <style type="text/css">
+        body {
+            background-image: url("{{ url_for('static', filename='background.png') }}");
+        }
+    </style>
     <style type="text/css">
     	{% block inline_css %}
     	{% endblock %}
