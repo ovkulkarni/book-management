@@ -9,3 +9,4 @@ pyBarcode==0.7
 Pillow==3.3.0
 XlsxWriter==0.9.3
 passlib==1.6.5
+Flask-Mail==0.9.1

@@ -1,4 +1,6 @@
 from flask import flash
+from flask_mail import Message
+from app import mail
 from requests import get
 import json
 import os
@@ -24,3 +26,12 @@ def isbn_lookup(isbn_number):
 		}
 	except KeyError:
 		return None
+
+def send_email(from_address, to_addresses, subject, text_body, html_body):
+	msg = Message()
+	msg.sender = from_address
+	msg.recipients = to_addresses
+	msg.subject = subject
+	msg.body = text_body
+	msg.html = html_body
+	mail.send(msg)

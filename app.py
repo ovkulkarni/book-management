@@ -1,6 +1,7 @@
 from database import database
 from flask import Flask, render_template, flash, redirect, make_response, request, session, g, url_for
 from flask_wtf.csrf import CsrfProtect
+from flask_mail import Mail
 from logging.handlers import SMTPHandler
 from datetime import date
 import logging
@@ -19,6 +20,8 @@ Message:
 
 csrf = CsrfProtect()
 
+mail = Mail()
+
 def create_app(environment):
     app = Flask(__name__, static_url_path="/bookstore/static/")
     app.config.from_pyfile("config/{}.py".format(environment))
@@ -36,6 +39,8 @@ def create_app(environment):
     app.register_blueprint(reports)
 
     csrf.init_app(app)
+
+    mail.init_app(app)
     
     @app.route("/bookstore/favicon.ico")
     def favicon(): return redirect('/static/favicon.ico')
@@ -79,10 +84,10 @@ def create_app(environment):
         return r
 
     if app.config["SEND_ERROR_EMAIL"]:
-        mail_handler = SMTPHandler(mailhost=('smtp.gmail.com', 587), 
-                                fromaddr=app.config["APP_FROM_EMAIL"],
+        mail_handler = SMTPHandler(mailhost=(app.config["MAIL_SERVER"], app.config["MAIL_PORT"]), 
+                                fromaddr=app.config["MAIL_USERNAME"],
                                 toaddrs=app.config["ADMINS"],
-                                credentials=(app.config["APP_FROM_EMAIL"], os.getenv("BOOKSTORE_EMAIL_PASSWORD", "")),
+                                credentials=(app.config["MAIL_USERNAME"], app.config["MAIL_PASSWORD"]),
                                 subject="{} - {}".format(app.config["ERROR_EMAIL_SUBJECT"], date.today()),
                                 secure=())
         mail_handler.setFormatter(log_formatter)

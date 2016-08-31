@@ -11,5 +11,11 @@ ENVIRONMENT = "prod"
 
 SEND_ERROR_EMAIL = True
 ADMINS = ["okulkarni@okulkarni.me"]
-APP_FROM_EMAIL = "bookstoreapplication@chinmayadc.org"
 ERROR_EMAIL_SUBJECT = "Bookstore Application Error"
+
+MAIL_SERVER = "smtp.gmail.com"
+MAIL_PORT = 587
+MAIL_USE_TLS = True
+MAIL_USE_SSL = False
+MAIL_USERNAME = "bookstoreapplication@chinmayadc.org"
+MAIL_PASSWORD = os.getenv("BOOKSTORE_EMAIL_PASSWORD", "")
