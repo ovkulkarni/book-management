@@ -1,7 +1,8 @@
 from flask import Blueprint, render_template, current_app, flash, url_for, request, session, flash, redirect, g
 from .models import Book, Purchase
 from .forms import AddToCartForm
-from utils import flash_errors
+from modules.account.models import Account
+from utils import flash_errors, send_email
 from datetime import datetime
 from database import database
 from decorators import login_required
@@ -72,6 +73,16 @@ def complete_purchase():
             return_book_transaction(p, b)
         else:
             add_book_to_purchase(p, b)
+        if b.count < 5:
+            accounts = Account.select().where(Account.admin == True)
+            recipients = []
+            for account in accounts:
+                recipients.append(account.email)
+            send_email(current_app.config["MAIL_USERNAME"], 
+                    recipients, 
+                    "Low Inventory Alert - {}".format(b.title), 
+                    render_template('cart/low_inventory.txt', book=b),
+                    render_template('cart/low_inventory.html', book=b))
     flash("Completed Purchase and Updated Inventory", "success")
     return redirect(url_for('.clear_cart'))
 

@@ -57,14 +57,16 @@ def add_manually():
 	if not form.validate_on_submit():
 		flash_errors(form)
 		return render_template("inventory/manual.html", form=form)
-	if Book.get(Book.isbn == form.isbn.data):
+	try:
+		Book.get(Book.isbn == form.isbn.data)
 		flash("Book with this ISBN already exists.", "error")
 		return render_template("inventory/manual.html", form=form)
-	b = Book.create(title=form.title.data, author=form.author.data, publisher=form.publisher.data, year=form.year.data, isbn=form.isbn.data, alt_code=form.alt_code.data, price=form.price.data)
-	b.count = 0
-	b.save()
-	flash("{} added to inventory. Count: {}".format(b.title, b.count), "success")
-	return redirect(url_for(".add_to_inventory"))
+	except Book.DoesNotExist:
+		b = Book.create(title=form.title.data, author=form.author.data, publisher=form.publisher.data, year=form.year.data, isbn=form.isbn.data, alt_code=form.alt_code.data, price=form.price.data)
+		b.count = 0
+		b.save()
+		flash("{} added to inventory. Count: {}".format(b.title, b.count), "success")
+		return redirect(url_for(".add_to_inventory"))
 
 @inventory.route("/edit/<isbn>/", methods=["GET", "POST"])
 @admin_required
