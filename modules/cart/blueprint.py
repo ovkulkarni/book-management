@@ -78,7 +78,7 @@ def complete_purchase():
             recipients = []
             for account in accounts:
                 recipients.append(account.email)
-            send_email(current_app.config["MAIL_USERNAME"], 
+            send_email(current_app.config["MAIL_FROM"], 
                     recipients, 
                     "Low Inventory Alert - {}".format(b.title), 
                     render_template('cart/low_inventory.txt', book=b),
