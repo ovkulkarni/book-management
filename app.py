@@ -1,6 +1,7 @@
 from database import database
 from flask import Flask, render_template, flash, redirect, make_response, request, session, g, url_for
 from flask_wtf.csrf import CsrfProtect
+from logging.handlers import SMTPHandler
 import logging
 import subprocess
 import traceback
@@ -10,9 +11,6 @@ import glob
 
 log_formatter = logging.Formatter('''
 Message type:       %(levelname)s
-Location:           %(pathname)s:%(lineno)d
-Module:             %(module)s
-Function:           %(funcName)s
 Time:               %(asctime)s
 Message:
 %(message)s
@@ -78,6 +76,17 @@ def create_app(environment):
             print("Deleting {}".format(file))
             os.remove(file)
         return r
+
+    if app.config["SEND_ERROR_EMAIL"]:
+        mail_handler = SMTPHandler(mailhost=('smtp.gmail.com', 587), 
+                                fromaddr=app.config["APP_FROM_EMAIL"],
+                                toaddrs=app.config["ADMINS"],
+                                credentials=(app.config["APP_FROM_EMAIL"], os.getenv("BOOKSTORE_EMAIL_PASSWORD", "")),
+                                subject=app.config["ERROR_EMAIL_SUBJECT"],
+                                secure=())
+        mail_handler.setFormatter(log_formatter)
+        mail_handler.setLevel(logging.ERROR)
+        app.logger.addHandler(mail_handler)
     
     return app
 
