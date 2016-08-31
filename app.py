@@ -2,6 +2,7 @@ from database import database
 from flask import Flask, render_template, flash, redirect, make_response, request, session, g, url_for
 from flask_wtf.csrf import CsrfProtect
 from logging.handlers import SMTPHandler
+from datetime import date
 import logging
 import subprocess
 import traceback
@@ -82,7 +83,7 @@ def create_app(environment):
                                 fromaddr=app.config["APP_FROM_EMAIL"],
                                 toaddrs=app.config["ADMINS"],
                                 credentials=(app.config["APP_FROM_EMAIL"], os.getenv("BOOKSTORE_EMAIL_PASSWORD", "")),
-                                subject=app.config["ERROR_EMAIL_SUBJECT"],
+                                subject="{} - {}".format(app.config["ERROR_EMAIL_SUBJECT"], date.today()),
                                 secure=())
         mail_handler.setFormatter(log_formatter)
         mail_handler.setLevel(logging.ERROR)
