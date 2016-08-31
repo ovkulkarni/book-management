@@ -81,12 +81,13 @@ def complete_purchase():
             recipients = []
             for account in accounts:
                 recipients.append(account.email)
-        for b in list(set(books_to_email)):
-            send_email(current_app.config["MAIL_FROM"], 
-                    recipients, 
-                    "Low Inventory Alert - {}".format(b.title), 
-                    render_template('cart/low_inventory.txt', book=b),
-                    render_template('cart/low_inventory.html', book=b))
+    print(list(set(books_to_email)))
+    for b in list(set(books_to_email)):
+        send_email(current_app.config["MAIL_FROM"], 
+                recipients, 
+                "Low Inventory Alert ({}) - {}".format(current_app.config["ENVIRONMENT"], b.title), 
+                render_template('cart/low_inventory.txt', book=b),
+                render_template('cart/low_inventory.html', book=b))
     flash("Completed Purchase and Updated Inventory", "success")
     return redirect(url_for('.clear_cart'))
 
