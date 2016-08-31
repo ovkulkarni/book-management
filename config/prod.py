@@ -7,7 +7,7 @@ SECRET_KEY = os.getenv("SECRET_KEY", os.urandom(32))
 DB_PATH = "/home/bookstore/bookstore.db"
 
 DISPLAY_DEBUG_INFO = False
-ENVIRONMENT = "prod"
+ENVIRONMENT = "Production"
 
 SEND_ERROR_EMAIL = True
 ADMINS = ["okulkarni@okulkarni.me"]

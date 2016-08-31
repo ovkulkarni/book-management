@@ -88,7 +88,7 @@ def create_app(environment):
                                 fromaddr=app.config["MAIL_USERNAME"],
                                 toaddrs=app.config["ADMINS"],
                                 credentials=(app.config["MAIL_USERNAME"], app.config["MAIL_PASSWORD"]),
-                                subject="{} - {}".format(app.config["ERROR_EMAIL_SUBJECT"], date.today()),
+                                subject="{} ({}) - {}".format(app.config["ERROR_EMAIL_SUBJECT"], app.config["ENVIRONMENT"], date.today()),
                                 secure=())
         mail_handler.setFormatter(log_formatter)
         mail_handler.setLevel(logging.ERROR)
