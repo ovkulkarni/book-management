@@ -76,18 +76,18 @@ def complete_purchase():
             add_book_to_purchase(p, b)
         if b.count < 5:
             books_to_email.append(b)
+    if current_app.config["SEND_INVENTORY_ALERTS"]:
         if len(books_to_email) > 0:
             accounts = Account.select().where(Account.admin == True)
             recipients = []
             for account in accounts:
                 recipients.append(account.email)
-    print(list(set(books_to_email)))
-    for b in list(set(books_to_email)):
-        send_email(current_app.config["MAIL_FROM"], 
-                recipients, 
-                "Low Inventory Alert ({}) - {}".format(current_app.config["ENVIRONMENT"], b.title), 
-                render_template('cart/low_inventory.txt', book=b),
-                render_template('cart/low_inventory.html', book=b))
+        for b in list(set(books_to_email)):
+            send_email(current_app.config["MAIL_FROM"], 
+                    recipients, 
+                    "Low Inventory Alert ({}) - {}".format(current_app.config["ENVIRONMENT"], b.title), 
+                    render_template('cart/low_inventory.txt', book=b),
+                    render_template('cart/low_inventory.html', book=b))
     flash("Completed Purchase and Updated Inventory", "success")
     return redirect(url_for('.clear_cart'))
 

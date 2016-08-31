@@ -6,6 +6,7 @@ DISPLAY_DEBUG_INFO = True
 ENVIRONMENT = "Staging"
 TEMPLATES_AUTO_RELOAD=True
 
+SEND_INVENTORY_ALERTS = False
 SEND_ERROR_EMAIL = True
 ADMINS = ["okulkarni@okulkarni.me"]
 ERROR_EMAIL_SUBJECT = "Bookstore Application Error"

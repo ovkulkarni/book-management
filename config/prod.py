@@ -9,6 +9,7 @@ DB_PATH = "/home/bookstore/bookstore.db"
 DISPLAY_DEBUG_INFO = False
 ENVIRONMENT = "Production"
 
+SEND_INVENTORY_ALERTS = True
 SEND_ERROR_EMAIL = True
 ADMINS = ["okulkarni@okulkarni.me"]
 ERROR_EMAIL_SUBJECT = "Bookstore Application Error"
