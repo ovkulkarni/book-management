@@ -66,6 +66,7 @@ def complete_purchase():
     if len(cart) < 1:
         flash("No Books in Cart", "error")
         return redirect(url_for(".show_cart"))
+    books_to_email = []
     for book in cart:
         p = Purchase.create(time=datetime.now(), seller=g.user, method=method, comment=comment)
         b = Book.get(Book.isbn == book.get("isbn"))
@@ -74,10 +75,13 @@ def complete_purchase():
         else:
             add_book_to_purchase(p, b)
         if b.count < 5:
+            books_to_email.append(b)
+        if len(books_to_email) > 0:
             accounts = Account.select().where(Account.admin == True)
             recipients = []
             for account in accounts:
                 recipients.append(account.email)
+        for b in list(set(books_to_email)):
             send_email(current_app.config["MAIL_FROM"], 
                     recipients, 
                     "Low Inventory Alert - {}".format(b.title), 
