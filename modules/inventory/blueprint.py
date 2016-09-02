@@ -84,6 +84,7 @@ def edit_book(isbn):
 	b.alt_code = form.alt_code.data
 	b.price = form.price.data
 	b.save()
+	current_app.logger.info("{} was updated by {}".format(b.title, g.user.name))
 	flash("Updated {}".format(b.title), "success")
 	return redirect(url_for(".view_inventory"))
 
