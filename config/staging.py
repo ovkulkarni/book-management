@@ -17,4 +17,4 @@ MAIL_USE_TLS = True
 MAIL_USE_SSL = False
 MAIL_USERNAME = "bookstoreapplication@chinmayadc.org"
 MAIL_PASSWORD = os.getenv("BOOKSTORE_EMAIL_PASSWORD", "")
-MAIL_FROM = "{} <{}}>".format(APP_NAME, MAIL_USERNAME)
+MAIL_FROM = "{} <{}>".format(APP_NAME, MAIL_USERNAME)
