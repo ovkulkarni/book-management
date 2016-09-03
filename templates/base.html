@@ -52,7 +52,13 @@
 	  <div class="top-bar-right">
 	  	<ul class="dropdown menu" data-dropdown-menu>
 	  		{% if g.user %}{% if g.user.admin %}
-	  		<li><a href="{{ url_for('account.add_account') }}"><i class="fa fa-plus-circle"></i><strong>Add Account</strong></a></li>
+	  		<li>
+	  			<a href="#"><i class="fa fa-shield"></i><strong>Accounts</strong></a>
+	  			<ul class="menu">
+	  				<li><a href="{{ url_for('account.add_account') }}"><i class="fa fa-plus-circle"></i><strong>Add Account</strong></a></li>
+	  				<li><a href="{{ url_for('account.view_accounts') }}"><i class="fa fa-list"></i><strong>View Accounts</strong></a></li>
+	  			</ul>
+	  		</li>
 	  		<li>
 	  			<a href="#"><i class="fa fa-usd"></i><strong>Sales Report</strong></a>
 	  			<ul class="menu">

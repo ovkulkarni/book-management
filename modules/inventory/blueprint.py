@@ -108,7 +108,6 @@ def view_purchases():
 		user_id = int(request.args.get("user_id"))
 		try:
 			a = Account.get(Account.id == user_id)
-			flash("Showing purchases created by {}".format(a.name), "success")
 			purchases = Purchase.select().where(Purchase.seller == a).order_by(Purchase.time.desc())
 		except Account.DoesNotExist:
 			flash("Invalid User ID", "error")

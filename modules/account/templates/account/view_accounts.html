@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% from "forms.html" import render_field %}
+{% block content %}
+	<div><p><br /></p></div>
+	{% for account in accounts %}
+	{% if loop.index0 is divisibleby(2) %}
+	<div class="row">
+		{% endif %}
+		<div class="large-6 columns">
+			<div class="callout">
+				<h3>Name: {{ account.name }}</h3>
+				<h4>Email: <a href="mailto:{{ account.email }}" target="_blank" rel="nooopener noreferrer">{{ account.email }}</a></h4>
+				{% if account.admin %}
+					<h5>This is an admin account.</h5>
+				{% endif %}
+				<div class="row">
+					<div class="columns">
+						{% if not account.disabled %}
+						<a href="{{ url_for('account.disable_account', account_id=account.id) }}" class="alert button">Disable Account</a>
+						{% else %}
+						<a href="{{ url_for('account.enable_account', account_id=account.id) }}" class="button">Enable Account</a>
+						{% endif %}
+					</div>
+				</div>
+			</div>
+		</div>
+	{% if loop.index is divisibleby(2) %}
+	</div>
+	{% endif %}
+	{% endfor %}
+{% endblock %}

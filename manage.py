@@ -8,6 +8,8 @@ from modules.account.models import Account
 from modules.inventory.models import Receipt
 from modules.account.localutils import hash_password
 
+import importlib
+
 manager = Manager(create_app)
 manager.add_option('-e', '--environment', dest='environment', required=True)
 
@@ -37,6 +39,11 @@ def create_first_user():
     else:
         print("Account already exists!")
         return False
+
+@manager.command
+def run_migration(migration):
+    """Run a migration"""
+    importlib.import_module("migrations.{}".format(migration)).run(db.database)
 
 if __name__ == '__main__':
     manager.run()

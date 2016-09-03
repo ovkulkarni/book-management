@@ -59,6 +59,37 @@ def add_account():
 	flash("Account Created", "success")
 	return redirect(url_for('.add_account'))
 
+@account.route("/view/")
+@admin_required
+def view_accounts():
+	accounts = Account.select()
+	return render_template("account/view_accounts.html", accounts=accounts)
+
+@account.route("/disable/<int:account_id>/")
+@admin_required
+def disable_account(account_id):
+	a = Account.get(Account.id == account_id)
+	if a.disabled:
+		flash("Account has already been disabled", "error")
+		return redirect(url_for('.view_accounts'))
+	a.disabled = True
+	a.save()
+	current_app.logger.warning("Account with email `{}` disabled by {}".format(a.email, g.user.name))
+	flash("Disabled Account with email {}".format(a.email), "success")
+	return redirect(url_for('.view_accounts'))
+
+@account.route("/enable/<int:account_id>/")
+@admin_required
+def enable_account(account_id):
+	a = Account.get(Account.id == account_id)
+	if not a.disabled:
+		flash("Account is already enabled", "error")
+		return redirect(url_for('.view_accounts'))
+	a.disabled = False
+	a.save()
+	flash("Enabled Account with Email `{}`".format(a.email), "success")
+	return redirect(url_for('.view_accounts'))
+
 @account.route("/login/", methods=["GET", "POST"])
 def login():
 	form = LoginForm(request.form)
@@ -69,12 +100,14 @@ def login():
 	if not accounts.count() > 0:
 		flash("Invalid Credentials", "error")
 		return redirect(url_for('.login'))
+	if accounts[0].disabled:
+		flash("This account has been disabled.", "error")
+		return redirect(url_for('.login'))
 	if not verify_password(form.password.data, accounts[0]):
 		flash("Invalid Credentials", "error")
 		return redirect(url_for('.login'))
 	session["uid"] = accounts[0].id
 	session["logged_in"] = True
-	flash("Successfully Logged In", "success")
 	return redirect(request.args.get("next", url_for('cart.show_cart')))
 
 @account.route("/logout/")
@@ -82,7 +115,6 @@ def login():
 def logout():
 	session["uid"] = -1
 	session["logged_in"] = False
-	flash("Successfully Logged Out", "success")
 	return redirect(url_for('home_page'))
 
 

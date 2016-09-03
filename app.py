@@ -84,15 +84,16 @@ def create_app(environment):
         return r
 
     if app.config["SEND_ERROR_EMAIL"]:
-        mail_handler = SMTPHandler(mailhost=(app.config["MAIL_SERVER"], app.config["MAIL_PORT"]), 
+        error_mail_handler = SMTPHandler(mailhost=(app.config["MAIL_SERVER"], app.config["MAIL_PORT"]), 
                                 fromaddr=app.config["MAIL_FROM"],
                                 toaddrs=app.config["ADMINS"],
                                 credentials=(app.config["MAIL_USERNAME"], app.config["MAIL_PASSWORD"]),
                                 subject="{} ({}) - {}".format(app.config["ERROR_EMAIL_SUBJECT"], app.config["ENVIRONMENT"], date.today()),
                                 secure=())
-        mail_handler.setFormatter(log_formatter)
-        mail_handler.setLevel(logging.ERROR)
-        app.logger.addHandler(mail_handler)
+        error_mail_handler.setFormatter(log_formatter)
+        error_mail_handler.setLevel(logging.WARNING)
+        app.logger.addHandler(error_mail_handler)
+
     
     return app
 
