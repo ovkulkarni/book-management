@@ -93,6 +93,8 @@ def enable_account(account_id):
 
 @account.route("/login/", methods=["GET", "POST"])
 def login():
+	if g.user:
+		return redirect(url_for('home_page'))
 	form = LoginForm(request.form)
 	if not form.validate_on_submit():
 		flash_errors(form)
@@ -101,11 +103,11 @@ def login():
 	if not accounts.count() > 0:
 		flash("Invalid Credentials", "error")
 		return redirect(url_for('.login'))
-	if accounts[0].disabled:
-		flash("This account has been disabled.", "error")
-		return redirect(url_for('.login'))
 	if not verify_password(form.password.data, accounts[0]):
 		flash("Invalid Credentials", "error")
+		return redirect(url_for('.login'))
+	if accounts[0].disabled:
+		flash("This account has been disabled.", "error")
 		return redirect(url_for('.login'))
 	session["uid"] = accounts[0].id
 	session["logged_in"] = True
@@ -122,3 +124,8 @@ def logout():
 @account.before_app_request
 def set_user():
     g.user = get_current_user()
+    if g.user and g.user.disabled:
+    	if not "logout" in request.path:
+    		flash("Your Account Has Been Disabled", "error")
+    		return redirect(url_for('account.logout'))
+
