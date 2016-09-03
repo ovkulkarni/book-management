@@ -87,6 +87,7 @@ def enable_account(account_id):
 		return redirect(url_for('.view_accounts'))
 	a.disabled = False
 	a.save()
+	current_app.logger.warning("Account with email `{}` enabled by {}".format(a.email, g.user.name))
 	flash("Enabled Account with Email `{}`".format(a.email), "success")
 	return redirect(url_for('.view_accounts'))
 
