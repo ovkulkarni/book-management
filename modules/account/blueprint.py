@@ -106,9 +106,6 @@ def login():
 	if not verify_password(form.password.data, accounts[0]):
 		flash("Invalid Credentials", "error")
 		return redirect(url_for('.login'))
-	if accounts[0].disabled:
-		flash("This account has been disabled.", "error")
-		return redirect(url_for('.login'))
 	session["uid"] = accounts[0].id
 	session["logged_in"] = True
 	return redirect(request.args.get("next", url_for('cart.show_cart')))
