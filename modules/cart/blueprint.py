@@ -8,7 +8,9 @@ from database import database
 from decorators import login_required
 
 
-cart = Blueprint("cart", __name__, template_folder="templates", url_prefix="/bookstore/cart")
+cart = Blueprint(
+    "cart", __name__, template_folder="templates", url_prefix="/bookstore/cart")
+
 
 @cart.route("/", methods=["GET", "POST"])
 @login_required
@@ -38,6 +40,7 @@ def show_cart():
     flash("Added {} to cart".format(b.title), "success")
     return redirect(url_for('.show_cart'))
 
+
 @cart.route("/remove/", methods=["POST"])
 @login_required
 def remove_item():
@@ -50,12 +53,14 @@ def remove_item():
     session["total"] = current_total
     return redirect(url_for('.show_cart'))
 
+
 @cart.route("/clear/")
 @login_required
 def clear_cart():
     session["cart"] = []
     session["total"] = 0
     return redirect(url_for('.show_cart'))
+
 
 @cart.route("/purchase/", methods=["POST"])
 @login_required
@@ -68,7 +73,8 @@ def complete_purchase():
         return redirect(url_for(".show_cart"))
     books_to_email = []
     for book in cart:
-        p = Purchase.create(time=datetime.now(), seller=g.user, method=method, comment=comment)
+        p = Purchase.create(
+            time=datetime.now(), seller=g.user, method=method, comment=comment)
         b = Book.get(Book.isbn == book.get("isbn"))
         if method == "return":
             return_book_transaction(p, b)
@@ -83,13 +89,15 @@ def complete_purchase():
             for account in accounts:
                 recipients.append(account.email)
         for b in list(set(books_to_email)):
-            send_email(current_app.config["MAIL_FROM"], 
-                    recipients, 
-                    "Low Inventory Alert ({}) - {}".format(current_app.config["ENVIRONMENT"], b.title), 
-                    render_template('cart/low_inventory.txt', book=b),
-                    render_template('cart/low_inventory.html', book=b))
+            send_email(current_app.config["MAIL_FROM"],
+                       recipients,
+                       "Low Inventory Alert ({}) - {}".format(
+                           current_app.config["ENVIRONMENT"], b.title),
+                       render_template('cart/low_inventory.txt', book=b),
+                       render_template('cart/low_inventory.html', book=b))
     flash("Completed Purchase and Updated Inventory", "success")
     return redirect(url_for('.clear_cart'))
+
 
 @database.transaction()
 def add_book_to_purchase(purchase, book):
@@ -98,6 +106,7 @@ def add_book_to_purchase(purchase, book):
     book.count -= 1
     purchase.save()
     book.save()
+
 
 @database.transaction()
 def return_book_transaction(purchase, book):

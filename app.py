@@ -22,6 +22,7 @@ csrf = CsrfProtect()
 
 mail = Mail()
 
+
 def create_app(environment):
     app = Flask(__name__, static_url_path="/bookstore/static/")
     app.config.from_pyfile("config/{}.py".format(environment))
@@ -41,7 +42,7 @@ def create_app(environment):
     csrf.init_app(app)
 
     mail.init_app(app)
-    
+
     @app.route("/bookstore/favicon.ico")
     def favicon(): return redirect('/static/favicon.ico')
 
@@ -51,7 +52,8 @@ def create_app(environment):
     @app.context_processor
     def inject_config():
         if app.config["DISPLAY_DEBUG_INFO"]:
-            version = subprocess.check_output(["git", "describe", "--always"]).decode().strip()
+            version = subprocess.check_output(
+                ["git", "describe", "--always"]).decode().strip()
         else:
             version = ""
         return dict(global_config=app.config, version=version)
@@ -84,17 +86,18 @@ def create_app(environment):
         return r
 
     if app.config["SEND_ERROR_EMAIL"]:
-        error_mail_handler = SMTPHandler(mailhost=(app.config["MAIL_SERVER"], app.config["MAIL_PORT"]), 
-                                fromaddr=app.config["MAIL_FROM"],
-                                toaddrs=app.config["ADMINS"],
-                                credentials=(app.config["MAIL_USERNAME"], app.config["MAIL_PASSWORD"]),
-                                subject="{} ({}) - {}".format(app.config["ERROR_EMAIL_SUBJECT"], app.config["ENVIRONMENT"], date.today()),
-                                secure=())
+        error_mail_handler = SMTPHandler(mailhost=(app.config["MAIL_SERVER"], app.config["MAIL_PORT"]),
+                                         fromaddr=app.config["MAIL_FROM"],
+                                         toaddrs=app.config["ADMINS"],
+                                         credentials=(
+                                             app.config["MAIL_USERNAME"], app.config["MAIL_PASSWORD"]),
+                                         subject="{} ({}) - {}".format(
+                                             app.config["ERROR_EMAIL_SUBJECT"], app.config["ENVIRONMENT"], date.today()),
+                                         secure=())
         error_mail_handler.setFormatter(log_formatter)
         error_mail_handler.setLevel(logging.WARNING)
         app.logger.addHandler(error_mail_handler)
 
-    
     return app
 
 if __name__ == '__main__':

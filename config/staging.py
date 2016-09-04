@@ -4,7 +4,7 @@ SECRET_KEY = "key"
 DB_PATH = "/home/bookstore/bookstore-test.db"
 DISPLAY_DEBUG_INFO = True
 ENVIRONMENT = "Staging"
-TEMPLATES_AUTO_RELOAD=True
+TEMPLATES_AUTO_RELOAD = True
 
 SEND_INVENTORY_ALERTS = False
 SEND_ERROR_EMAIL = True

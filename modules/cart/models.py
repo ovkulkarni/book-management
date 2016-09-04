@@ -3,6 +3,7 @@ from peewee import *
 from playhouse.fields import ManyToManyField
 from modules.account.models import Account
 
+
 class Book(BaseModel):
     title = CharField(128, verbose_name="Book Title")
     author = CharField(128, verbose_name="Book Author", null=True)
@@ -15,14 +16,15 @@ class Book(BaseModel):
 
     def serialize(self):
         return {
-                "title": self.title,
-                "author": self.author,
-                "publisher": self.publisher,
-                "year": self.year,
-                "isbn": self.isbn,
-                "price": self.price,
-                "count": self.count
-                }
+            "title": self.title,
+            "author": self.author,
+            "publisher": self.publisher,
+            "year": self.year,
+            "isbn": self.isbn,
+            "price": self.price,
+            "count": self.count
+        }
+
 
 class Purchase(BaseModel):
     time = DateTimeField(verbose_name="Purchase Date/Time")

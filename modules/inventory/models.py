@@ -3,6 +3,7 @@ from peewee import *
 from modules.account.models import Account
 from modules.cart.models import Book
 
+
 class Receipt(BaseModel):
     book = ForeignKeyField(Book, related_name="receipts")
     user = ForeignKeyField(Account, related_name="additions")
