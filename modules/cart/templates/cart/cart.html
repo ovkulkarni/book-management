@@ -25,8 +25,11 @@
 					</div>
 				</div>
 				<div class="row">
-					<div class="columns">
-						<p>Author: {{ book.author }}</p>
+					<div class="large-3 columns">
+						Author: {{ book.author }}
+					</div>
+					<div class="large-9 columns">
+						ISBN: {{ book.isbn }}
 					</div>
 				</div>
 				<form method="POST" action="{{ url_for('cart.remove_item') }}">
