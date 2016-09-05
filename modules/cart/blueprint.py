@@ -87,7 +87,8 @@ def complete_purchase():
             accounts = Account.select().where(Account.admin == True)
             recipients = []
             for account in accounts:
-                recipients.append(account.email)
+                if not account.disabled
+                    recipients.append(account.email)
         for b in list(set(books_to_email)):
             send_email(current_app.config["MAIL_FROM"],
                        recipients,
