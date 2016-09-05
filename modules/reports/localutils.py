@@ -36,22 +36,24 @@ def generate_inventory_spreadsheet(books):
     bold = workbook.add_format({'bold': True})
     money = workbook.add_format({'num_format': '$##'})
     worksheet.write(0, 0, "Book Title", bold)
-    worksheet.write(0, 1, "Book ISBN", bold)
-    worksheet.write(0, 2, "Book Price", bold)
-    worksheet.write(0, 3, "Book SKU", bold)
-    worksheet.write(0, 4, "Book Quantity", bold)
-    worksheet.write(0, 5, "Total Value", bold)
+    worksheet.write(0, 1, "Book Author", bold)
+    worksheet.write(0, 2, "Book ISBN", bold)
+    worksheet.write(0, 3, "Book Price", bold)
+    worksheet.write(0, 4, "Book SKU", bold)
+    worksheet.write(0, 5, "Book Quantity", bold)
+    worksheet.write(0, 6, "Total Value", bold)
     row = 1
     for book in books:
         worksheet.write(row, 0, book.title)
-        worksheet.write(row, 1, book.isbn)
-        worksheet.write(row, 2, book.price, money)
-        worksheet.write(row, 3, book.alt_code)
-        worksheet.write(row, 4, book.count)
+        worksheet.write(row, 1, book.author)
+        worksheet.write(row, 2, book.isbn)
+        worksheet.write(row, 3, book.price, money)
+        worksheet.write(row, 4, book.alt_code)
+        worksheet.write(row, 5, book.count)
         worksheet.write(
-            row, 5, "=PRODUCT(C{}:D{})".format(row+1, row+1), money)
+            row, 6, "=PRODUCT(C{}:D{})".format(row+1, row+1), money)
         row += 1
-    worksheet.set_column(0, 4, 20)
+    worksheet.set_column(0, 6, 20)
     workbook.close()
     return "inventory.xlsx"
 
