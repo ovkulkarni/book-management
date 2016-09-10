@@ -51,7 +51,7 @@ def generate_inventory_spreadsheet(books):
         worksheet.write(row, 4, book.alt_code)
         worksheet.write(row, 5, book.count)
         worksheet.write(
-            row, 6, "=PRODUCT(C{}:D{})".format(row+1, row+1), money)
+            row, 6, "=PRODUCT(D{}:F{})".format(row+1, row+1), money)
         row += 1
     worksheet.set_column(0, 6, 20)
     workbook.close()
