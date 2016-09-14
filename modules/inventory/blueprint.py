@@ -6,6 +6,7 @@ from .forms import ISBNBookForm, ManualBookForm, SearchForm
 from utils import flash_errors, isbn_lookup
 from datetime import date, datetime
 from dateutil.relativedelta import relativedelta
+from dateutil.parser import parse
 from os.path import dirname, realpath, isfile, join
 from os import getcwd, chdir
 from barcode.writer import ImageWriter
@@ -216,7 +217,7 @@ def add_books_to_inventory(books, form):
         b = Book.get(Book.isbn == book.get("isbn"))
         b.count += int(form.get("quantity-{}".format(b.isbn)))
         r = Receipt.create(book=b, user=g.user, date=datetime.now(), invoice_number=form.get("invoice_number"),
-                           invoice_date=datetime.strptime(form.get("invoice_date"), "%Y-%m-%d").date(), unit_price=int(form.get("unit-{}".format(b.isbn))),
+                           invoice_date=parse(form.get("invoice_date")).date(), unit_price=int(form.get("unit-{}".format(b.isbn))),
                            quantity=int(form.get("quantity-{}".format(b.isbn))))
         r.save()
         b.save()
